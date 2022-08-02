@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 12:47:38 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/01 17:43:17 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/02 17:37:13 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # include <memory>
 # include <iostream>
 # include <iterator>
+# include "iterator_traits.hpp"
 
 namespace ft
 {
@@ -49,44 +50,77 @@ namespace ft
                 }
             };
             
-            // template <class InputIterator>                           -> Should guarantee iterators are being given as arguments!
-            // vector (InputIterator first, InputIterator last,
-            //      const allocator_type& alloc = allocator_type()) {
+            template <class InputIterator>
+            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()): _alloc(alloc) {
                     
-
-            // };
+                this->_size = std::distance(first, last);
+                this->_start = this->_alloc.allocate(_size);
+                pointer it = this->_start;
+                while (first != last)
+                    *(it++) = *(first++);
+            };
             
-            // vector (const vector& x) {
+            vector (vector const& x): _alloc(x._alloc), _size(x._size) {
 
-
-            // };
+                this->_start = this->_alloc.allocate(this->_size);
+                *this = x;
+            };
             ~vector(void) {
 
                 this->_alloc.deallocate(this->_start, _size);
             };
 
+            /*Vector operators overload*/
+
+            vector& operator=(vector const& rhs) {
+
+                iterator    itBegin = const_cast<vector&>(rhs).begin();
+                iterator    itEnd = const_cast<vector&>(rhs).end();
+                iterator    vStartIt(this->_start);
+                
+                while (itBegin != itEnd)
+                    *(vStartIt++) = *(itBegin++);
+                return *this;
+            };
+            
             /*Iterators*/
             
-            class   iterator: public std::iterator<std::random_access_iterator_tag, value_type> {
+            class   iterator: public iterator_traits<value_type*> {
 
                 public:
+                    
+                    typedef typename iterator_traits<value_type*>::difference_type difference_type;
+                    
                     /*Iterator constructors*/
-                    iterator(value_type* ptr): _ptr(ptr) {};
+                    iterator(pointer ptr): _ptr(ptr) {};
                     iterator(void) {};
                     ~iterator(void) {};
-                    iterator(const iterator& cpy): _ptr(cpy._ptr) {};
+                    iterator(iterator const& cpy): _ptr(cpy._ptr) {};
 
                     /*operators*/
-                    bool        operator==(iterator const& rhs) { if (this->_ptr == rhs._ptr) return true; return false; };
-                    bool        operator!=(iterator const& rhs) { if (this->_ptr != rhs._ptr) return true; return false; };
-                    iterator&   operator++(void) { this->_ptr++; return this; }; 
-                    //iterator    operator++(iterator old) { iterator temp(this); this->_ptr++; return temp; };
-                    iterator&   operator--(void) { this->_ptr--; return this; }; 
-                    //iterator    operator--(iterator old) { iterator temp(this); this->_ptr--; return temp; };
+                    bool            operator==(iterator const& rhs) { return this->_ptr == rhs._ptr; };
+                    bool            operator!=(iterator const& rhs) { return this->_ptr != rhs._ptr; };
+                    bool            operator<(iterator const& rhs) { return this->_ptr < rhs._ptr; };
+                    bool            operator>(iterator const& rhs) { return this->_ptr > rhs._ptr; };
+                    bool            operator<=(iterator const& rhs) { return this->_ptr <= rhs._ptr; };
+                    bool            operator>=(iterator const& rhs) { return this->_ptr >= rhs._ptr; };
+                    
+                    iterator&       operator++(void) { this->_ptr++; return this; }; 
+                    iterator        operator++(int) { iterator temp(*this); this->_ptr++; return temp; };
+                    iterator&       operator--(void) { this->_ptr--; return this; }; 
+                    iterator        operator--(int) { iterator temp(*this); this->_ptr--; return temp; };
+                    
+                    iterator&       operator+(int n) { this->_ptr += n; return *this; };
+                    iterator&       operator+(iterator const& rhs) { rhs._ptr += *this; return &rhs;};
+                    iterator&       operator-(int n) { this->_ptr -= n; return *this; };
+                    difference_type operator-(iterator const& rhs) { return this->_ptr - rhs._ptr; };
+            		iterator&       operator=(iterator const& rhs) { this->_ptr = rhs._this; return *this; };
+
+                    value_type&  operator*(void) { return *(this->_ptr); };
                 
                 private:
 
-                    value_type*     _ptr;
+                    pointer     _ptr;
             };
 
             typedef vector::iterator        iterator;
@@ -97,8 +131,12 @@ namespace ft
             typedef vector::reverse_iterator        reverse_iterator;
             typedef const vector::reverse_iterator  const_reverse_iterator;
 
-            typedef typename std::iterator_traits<vector::iterator>::difference_type difference_type;
+            /*Iterator getters*/
 
+            iterator begin(void) { iterator begin(this->_start); return begin; };
+		    iterator end(void) { iterator end(&(this->_start[this->_size])); return end; };
+
+            /*Helping functions*/
             const value_type    getStart(void) { return *(this->_start); };
             void                printContent(void) { 
 

@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 16:24:48 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/01 17:43:14 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/02 17:27:20 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,18 @@
 
 int main(void) {
 
-    ft::vector<int> test(4, 100);
+    ft::vector< float > test2(5, 100.2f); //-> Use for error testing of constructor!
+    
 
-    //std::vector<int> test2(1.5, 2.5); -> Use for error testing of constructor!
+    ft::vector<float> test(test2);
 
-    test.printContent();
+    ft::vector<float>::iterator itBegin = test.begin();
+    ft::vector<float>::iterator itEnd = test.end();
+    //itBegin = 3 + itBegin;
+
+    while (itBegin != itEnd)
+    {
+        std::cout << *(itBegin++) << std::endl;
+    }
+    //test.printContent();
 }
