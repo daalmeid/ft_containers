@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 14:23:20 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/04 15:49:09 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/10 16:59:54 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,17 @@ namespace ft
 			bool            operator<=(iterator const& rhs) { return this->_ptr <= rhs._ptr; };
 			bool            operator>=(iterator const& rhs) { return this->_ptr >= rhs._ptr; };
 			
-			reference       operator++(void) { this->_ptr++; return *this; }; 
+			iterator&       operator++(void) { this->_ptr++; return *this; }; 
 			iterator        operator++(int) { iterator temp(*this); this->_ptr++; return temp; };
-			reference       operator--(void) { this->_ptr--; return *this; }; 
+			iterator&       operator--(void) { this->_ptr--; return *this; }; 
 			iterator        operator--(int) { iterator temp(*this); this->_ptr--; return temp; };
 			
 			iterator        operator+(difference_type n) { iterator temp(*this); temp._ptr += n; return temp; };
 			iterator        operator-(difference_type n) { iterator temp(*this); temp._ptr -= n; return temp; };
 			difference_type operator-(iterator const& rhs) { return this->_ptr - rhs._ptr; };
-			reference       operator+=(difference_type n) { this->_ptr += n; return *this; };
-			reference       operator-=(difference_type n) { this->_ptr -= n; return *this; };
-			//reference		operator=(iterator const& rhs) { this->_ptr = rhs._ptr; return *this; };
+			iterator&       operator+=(difference_type n) { this->_ptr += n; return *this; };
+			iterator&       operator-=(difference_type n) { this->_ptr -= n; return *this; };
+			iterator&		operator=(iterator const& rhs) { this->_ptr = rhs._ptr; return *this; };
 
 			reference    	operator*(void) { return *(this->_ptr); };
 			reference		operator[](difference_type n) { return this->_ptr[n]; };
@@ -57,6 +57,9 @@ namespace ft
 
 			pointer     _ptr;
 	};
+
+	template <class T>
+	iterator<T>        operator+(typename iterator<T>::difference_type n, const iterator<T>& rhs) { iterator<T> temp(rhs); temp += n; return temp; };
 }
 
 #endif
