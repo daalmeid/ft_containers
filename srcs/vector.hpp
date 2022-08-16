@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 12:47:38 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/11 16:41:44 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/16 16:10:39 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "enable_if.hpp"
 # include "equal.hpp"
 # include "lexicographical_compare.hpp"
+# include <iostream>
 
 namespace ft
 {
@@ -93,10 +94,18 @@ namespace ft
 
                 iterator    itBegin = const_cast<vector&>(rhs).begin();
                 iterator    itEnd = const_cast<vector&>(rhs).end();
-                pointer     copy_creator = this->_start;
                 
-                while (itBegin != itEnd)
+                if (this->_size < rhs._size)
+					this->reserve(rhs._size);
+
+                pointer     copy_creator = this->_start;
+				
+				while (itBegin != itEnd)
                     this->_alloc.construct(copy_creator++, *(itBegin++));
+				if (this->_size > rhs._size)
+					this->resize(rhs._size);
+				else
+					this->_size = rhs._size;
                 return *this;
             };
             
@@ -113,12 +122,14 @@ namespace ft
 
             /*Iterator getters*/
 
-            iterator            begin(void) { iterator beginIt(this->_start); return beginIt; };
-            const_iterator      begin(void) const { const_iterator beginIt(this->_start); return beginIt; };
-		    iterator            end(void) { iterator endIt(&(this->_start[this->_size])); return endIt; };
-		    const_iterator      end(void) const { const_iterator endIt(&(this->_start[this->_size])); return endIt; };
-            reverse_iterator    rend(void) { reverse_iterator rEndIt(this->begin()); return rEndIt; };
-            reverse_iterator    rbegin(void) { reverse_iterator rBegIt(this->end()); return rBegIt; };
+            iterator            	begin(void) { iterator beginIt(this->_start); return beginIt; };
+            const_iterator      	begin(void) const { const_iterator beginIt(this->_start); return beginIt; };
+		    iterator            	end(void) { iterator endIt(&(this->_start[this->_size])); return endIt; };
+		    const_iterator      	end(void) const { const_iterator endIt(&(this->_start[this->_size])); return endIt; };
+            reverse_iterator    	rend(void) { reverse_iterator rEndIt(this->begin()); return rEndIt; };
+            const_reverse_iterator	rend(void) const { const_reverse_iterator cRevEndIt(&(this->begin())); return cRevEndIt; };
+			reverse_iterator    	rbegin(void) { reverse_iterator rBegIt(this->end()); return rBegIt; };
+            const_reverse_iterator	rbegin(void) const { const_reverse_iterator cRevBegIt(&(this->end())); return cRevBegIt; };
 
             /*Capacity functions*/
 
@@ -207,7 +218,8 @@ namespace ft
                     this->_alloc.destroy(&(this->_start[i++]));
                 this->_size = newSize;
             };
-            void                assign(size_type n, const value_type& val) {
+            
+			void                assign(size_type n, const value_type& val) {
 
                 size_type   i = 0;
 
@@ -225,7 +237,9 @@ namespace ft
 
             void                push_back(const value_type& val) {
 
-                if (this->_size == this->_capacity)
+                if (this->_capacity == 0)
+					this->reserve(1);
+				else if (this->_size == this->_capacity)
                     this->reserve(this->_capacity * 2);
                 this->_alloc.construct(&(this->_start[this->_size++]), val);
             };
@@ -242,8 +256,10 @@ namespace ft
                 {
                     indexGet++;
                     i++;
-                }    
-                if (this->_size == this->_capacity)
+                }
+				if (this->_capacity == 0)
+					this->reserve(1);
+                else if (this->_size == this->_capacity)
                     this->reserve(this->_capacity * 2);
 				
 				iterator            returner = this->begin() + i;
@@ -263,6 +279,7 @@ namespace ft
                 return returner;
             };
 
+
             void                insert(iterator position, size_type n, const value_type& val) {
 
 				vector<value_type>  saveState(position, this->end());
@@ -274,11 +291,11 @@ namespace ft
                     indexGet++;
                     i++;
                 }
-				if (this->_size + n > this->_capacity * 2)
-                    this->reserve(this->_size + n);
-                else if (this->_size + n > this->_capacity)
+                if (this->_size + n <= this->_size * 2 && this->_size + n > this->_capacity)
                     this->reserve(this->_capacity * 2);
-                for (size_type j = 0; j < n; j++) {
+				else if (this->_size + n > this->_capacity)
+                    this->reserve(this->_size + n);
+				for (size_type j = 0; j < n; j++) {
 
 					this->_alloc.destroy(&(this->_start[i]));
                 	this->_alloc.construct(&(this->_start[i++]), val);
@@ -298,6 +315,7 @@ namespace ft
             void                insert(iterator position, InputIterator first, InputIterator last) {
 
 				vector<value_type>  saveState(position, this->end());
+				vector<value_type>  itValCpy(first, last);
 				iterator            indexGet = this->begin();
                 size_type           i = 0;
 
@@ -307,11 +325,13 @@ namespace ft
                     i++;
                 }
 				size_type	dist = std::distance(first, last);
-				if (this->_size + dist > this->_capacity * 2)
+				if (this->_size + dist <= this->_size * 2 && this->_size + dist > this->_capacity)
+				    this->reserve(this->_capacity * 2);
+				else if (this->_size + dist > this->_capacity)
                     this->reserve(this->_size + dist);
-                else if (this->_size + dist > this->_capacity)
-                    this->reserve(this->_capacity * 2);
-                for (size_type j = 0; j < dist; j++) {
+                first = itValCpy.begin();
+                last = itValCpy.end();
+				for (size_type j = 0; j < dist; j++) {
 
 					this->_alloc.destroy(&(this->_start[i]));
                 	this->_alloc.construct(&(this->_start[i++]), *(first++));
@@ -342,20 +362,24 @@ namespace ft
 			};
             
             iterator            erase(iterator first, iterator last) {
-
-				vector<value_type>  saveState(last, this->end());
-				iterator			ssIt = saveState.begin();
-				size_type			dist = std::distance(first, last);
-                iterator			returner = first;
 				
-				while (ssIt != saveState.end()) {
+				iterator	returner = first;
+				
+				if ( first != last)
+				{	
+					size_type	dist = std::distance(first, last);
+					if (last != this->end())
+					{
+						while (last != this->end()) {
 
-					this->_alloc.destroy(&*first);
-					this->_alloc.construct(&*first++, *ssIt++);
+							this->_alloc.destroy(&*first);
+							this->_alloc.construct(&*first++, *last++);
+						}
+					}
+					for (size_type i = 1; i < dist; i++)
+						this->_alloc.destroy(&*(this->end() - i));
+					this->_size -= dist;
 				}
-				while (first != this->end())
-					this->_alloc.destroy(&*first++);
-				this->_size -= dist;
 				return returner;
 			};
 

@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 14:23:20 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/10 16:59:54 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/12 15:36:31 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ namespace ft
 			typedef typename iterator_traits<T*>::reference reference;
 			
 			/*Iterator constructors*/
-			iterator(void) {};
+			iterator(void): _ptr(NULL) {};
 			iterator(pointer ptr): _ptr(ptr) {};
 			~iterator(void) {};
 			iterator(iterator const& cpy): _ptr(cpy._ptr) {};

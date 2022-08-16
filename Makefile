@@ -31,7 +31,12 @@ FLAGS	=		-Wall -Werror -Wextra -std=c++98
 
 ################## FILES ###################
 
-SRCFILE	=		main.cpp		
+SRCFILE	=		main.cpp\
+				ConstructorTests.cpp\
+				CapacityTests.cpp\
+				ElAccessTests.cpp\
+				ModifiersTests.cpp\
+				OperatorsTests.cpp
 
 SRCCMP	=		$(addprefix srcs/, $(SRCFILE))
 
