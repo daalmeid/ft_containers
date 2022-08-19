@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 15:40:13 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/10 17:15:51 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/19 11:52:46 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ namespace ft
 			reverse_iterator(void) {};
 			reverse_iterator(iterator_type it): _base(it) { };
 			~reverse_iterator(void) {};
-			reverse_iterator(reverse_iterator const& cpy): _base(cpy._base) {};
+			template <class Iter>
+			reverse_iterator(reverse_iterator<Iter> const& cpy): _base(cpy.base()) {};
 			
 			/*member operators*/
 			reverse_iterator&	operator++(void) {this->_base--; return *this; }; 
@@ -48,6 +49,7 @@ namespace ft
 			reverse_iterator&	operator=(reverse_iterator const& rhs) { this->_base = rhs._base; return *this; };
 
 			reference	operator*(void) { return *(this->_base - 1); };
+			pointer		operator->(void) { return this->_base - 1; };
 			reference	operator[](difference_type n) { return (this->_base[-n - 1]); };
 
 			iterator_type 		base(void) const { return this->_base; };

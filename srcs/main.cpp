@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 16:24:48 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/16 17:15:28 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/19 11:24:26 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ int main(void) {
 	
 	operators_tests(vNorm, itBeg, itEnd);
 
-    
+	iterator_tests();
+
 }

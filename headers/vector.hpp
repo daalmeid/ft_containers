@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 12:47:38 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/16 16:10:39 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/19 12:03:24 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,6 @@ namespace ft
             typedef typename allocator_type::const_pointer      const_pointer;
             typedef size_t                                      size_type;
 
-            /*integral_constant typedefs*/
-
-            typedef integral_constant<bool, true>               true_type;
-            typedef integral_constant<bool, false>              false_type;
-
             /*constructors*/
 
             explicit vector(const allocator_type& alloc = allocator_type()): _alloc(alloc), _size(0), _capacity(0) {
@@ -60,17 +55,14 @@ namespace ft
                 }
             };
             
-            template <class InputIterator>
-            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()): _alloc(alloc) { //Should it allocate the value inside last???
-                    
-                this->_size = std::distance(first, last);
-                this->_capacity = this->_size;
-                this->_start = this->_alloc.allocate(this->_capacity);
-                pointer it = this->_start;
-                while (first != last)
-                    this->_alloc.construct(it++, *(first++));
+            template <class InputIterator >
+            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()): _alloc(alloc) {
+
+				typename is_integral<InputIterator>::type	t;
+				integralDealer(first, last, t);
             };
             
+
             vector (vector const& x): _alloc(x._alloc), _size(x._size), _capacity(x._capacity) {
 
                 this->_start = this->_alloc.allocate(this->_capacity);
@@ -114,22 +106,22 @@ namespace ft
 
             /*Iterator typedefs*/
             
-            typedef typename ft::iterator<value_type>       			iterator;
-            typedef typename ft::iterator<value_type> const 			const_iterator;
+            typedef typename ft::iterator<pointer>       			iterator;
+            typedef typename ft::iterator<const_pointer>			const_iterator;
 
-            typedef typename ft::reverse_iterator<value_type>           reverse_iterator;
-            typedef typename ft::reverse_iterator<value_type> const     const_reverse_iterator;
+            typedef typename ft::reverse_iterator<iterator>           reverse_iterator;
+            typedef typename ft::reverse_iterator<const_iterator>     const_reverse_iterator;
 
             /*Iterator getters*/
 
-            iterator            	begin(void) { iterator beginIt(this->_start); return beginIt; };
-            const_iterator      	begin(void) const { const_iterator beginIt(this->_start); return beginIt; };
+            iterator            	begin(void) { return iterator(this->_start); };
+            const_iterator      	begin(void) const { return const_iterator(this->_start); };
 		    iterator            	end(void) { iterator endIt(&(this->_start[this->_size])); return endIt; };
 		    const_iterator      	end(void) const { const_iterator endIt(&(this->_start[this->_size])); return endIt; };
             reverse_iterator    	rend(void) { reverse_iterator rEndIt(this->begin()); return rEndIt; };
-            const_reverse_iterator	rend(void) const { const_reverse_iterator cRevEndIt(&(this->begin())); return cRevEndIt; };
+            const_reverse_iterator	rend(void) const { const_reverse_iterator cRevEndIt((this->begin())); return cRevEndIt; };
 			reverse_iterator    	rbegin(void) { reverse_iterator rBegIt(this->end()); return rBegIt; };
-            const_reverse_iterator	rbegin(void) const { const_reverse_iterator cRevBegIt(&(this->end())); return cRevBegIt; };
+            const_reverse_iterator	rbegin(void) const { const_reverse_iterator cRevBegIt((this->end())); return cRevBegIt; };
 
             /*Capacity functions*/
 
@@ -155,7 +147,7 @@ namespace ft
             };
             size_type           capacity(void) const { return this->_capacity; };
             bool                empty(void) const { return _size == 0; };
-            void                reserve(size_type n) { // can throw errors if n bigger than max_type or allocation fails!!
+            void                reserve(size_type n) {
 
                 if (this->_capacity < n) {
 
@@ -168,7 +160,7 @@ namespace ft
                         this->_alloc.construct(copy_location++, *(copy_creator));
                         this->_alloc.destroy(copy_creator++);
                     }
-                    this->_alloc.deallocate(this->_start, _capacity);
+                    this->_alloc.deallocate(this->_start, this->_capacity);
                     this->_start = _newStart;
                     this->_capacity = n;
                 }
@@ -227,7 +219,8 @@ namespace ft
                     this->reserve(n);
                 while (i < n) {
 
-                    this->_alloc.destroy(&(this->_start[i]));
+					if (i < this->_size)
+                    	this->_alloc.destroy(&(this->_start[i]));
                     this->_alloc.construct(&(this->_start[i++]), val);
                 }
                 while (i < this->_size)
@@ -297,7 +290,8 @@ namespace ft
                     this->reserve(this->_size + n);
 				for (size_type j = 0; j < n; j++) {
 
-					this->_alloc.destroy(&(this->_start[i]));
+					if (i < this->_size)
+						this->_alloc.destroy(&(this->_start[i]));
                 	this->_alloc.construct(&(this->_start[i++]), val);
 				}
 				
@@ -305,7 +299,8 @@ namespace ft
 
                 while (ssIt != saveState.end())
                 {
-                    this->_alloc.destroy(&(this->_start[i]));
+					if (i < this->_size)
+						this->_alloc.destroy(&(this->_start[i]));
                     this->_alloc.construct(&(this->_start[i++]), *ssIt++);
                 }
                 this->_size += n;
@@ -331,9 +326,10 @@ namespace ft
                     this->reserve(this->_size + dist);
                 first = itValCpy.begin();
                 last = itValCpy.end();
-				for (size_type j = 0; j < dist; j++) {
+				while (first != last) {
 
-					this->_alloc.destroy(&(this->_start[i]));
+					if (i < this->_size)
+						this->_alloc.destroy(&(this->_start[i]));
                 	this->_alloc.construct(&(this->_start[i++]), *(first++));
 				}
 				
@@ -341,7 +337,8 @@ namespace ft
 
                 while (ssIt != saveState.end())
                 {
-                    this->_alloc.destroy(&(this->_start[i]));
+					if (i < this->_size)
+                    	this->_alloc.destroy(&(this->_start[i]));
                     this->_alloc.construct(&(this->_start[i++]), *ssIt++);
                 }
                 this->_size += dist;
@@ -365,7 +362,7 @@ namespace ft
 				
 				iterator	returner = first;
 				
-				if ( first != last)
+				if (first != last)
 				{	
 					size_type	dist = std::distance(first, last);
 					if (last != this->end())
@@ -376,7 +373,7 @@ namespace ft
 							this->_alloc.construct(&*first++, *last++);
 						}
 					}
-					for (size_type i = 1; i < dist; i++)
+					for (size_type i = 1; i <= dist; i++)
 						this->_alloc.destroy(&*(this->end() - i));
 					this->_size -= dist;
 				}
@@ -414,6 +411,44 @@ namespace ft
             size_type               _capacity;
             pointer                 _start;
             
+			/*Constructor specification for iterators*/
+			template <class Arg >
+			void	integralDealer(Arg first, Arg last, typename is_integral<Arg>::false_type t) {
+
+				(void)t;
+				this->_size = std::distance(first, last);
+				this->_capacity = this->_size;
+				if (this->_capacity > this->max_size())
+				{
+					throw std::length_error("cannot create std::vector larger than max_size()");
+					return ;
+				}	
+				this->_start = this->_alloc.allocate(this->_capacity);
+				pointer it = this->_start;
+				while (first != last)
+					this->_alloc.construct(it++, *(first++));
+			};
+
+			/*Constructor specification for integral types*/
+			template <class Arg >
+			void	integralDealer(Arg n, Arg val, typename is_integral<Arg>::true_type t) {
+
+				(void)t;
+                this->_size = static_cast<size_type>(n);
+				this->_capacity = static_cast<size_type>(n);
+                if (this->_capacity > this->max_size())
+				{
+					throw std::length_error("cannot create std::vector larger than max_size()");
+					return ;
+				}	
+				this->_start = this->_alloc.allocate(this->_capacity);
+                pointer it = this->_start;
+				for (size_t i = 0; i < this->_size; i++)
+                {
+                    this->_alloc.construct(it++, val);
+                }
+			};
+
     };
 
 	/*Relational operators*/

@@ -27,7 +27,8 @@ RM		=		rm -f
 ################## COMPILER ################
 
 CMP		=		c++
-FLAGS	=		-Wall -Werror -Wextra -std=c++98
+FLAGS	=		-g -Wall -Werror -Wextra -std=c++98
+INCLUDE	=		-I ./headers/
 
 ################## FILES ###################
 
@@ -36,7 +37,8 @@ SRCFILE	=		main.cpp\
 				CapacityTests.cpp\
 				ElAccessTests.cpp\
 				ModifiersTests.cpp\
-				OperatorsTests.cpp
+				OperatorsTests.cpp\
+				IteratorTests.cpp
 
 SRCCMP	=		$(addprefix srcs/, $(SRCFILE))
 
@@ -47,10 +49,10 @@ OBJS	=		$(patsubst srcs/%.cpp, srcs/%.o, $(SRCCMP))
 all: $(NAME)
 
 srcs/%.o : srcs/%.cpp
-	$(CMP) $(FLAGS) -c $< -o $@
+	$(CMP) $(FLAGS) $(INCLUDE) -c $< -o $@
 
 $(NAME): $(OBJS)
-	$(CMP) $(FLAGS) $(OBJS) -o $(NAME)
+	$(CMP) $(FLAGS) $(INCLUDE) $(OBJS) -o $(NAME)
 
 ################## CLEAN ###################
 

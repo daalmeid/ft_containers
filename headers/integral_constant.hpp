@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 10:18:04 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/03 12:07:44 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/18 14:57:38 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 
 namespace ft
 {
-	template <class T, T v>
+	template <class T, bool v>
 	struct integral_constant {
-		static const T value = v;
+		static const bool value = v;
 		typedef T value_type;
-		typedef integral_constant<T,v> type;
+		typedef integral_constant<T,v> 		type;
+		typedef integral_constant<T, true>	true_type;
+    	typedef integral_constant<T, false>	false_type;
 		operator T() const { return v; };
 	};
 }

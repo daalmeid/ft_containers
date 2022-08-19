@@ -6,13 +6,13 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 16:44:14 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/16 17:17:40 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/17 15:32:21 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "containers.hpp"
 
-static void	vector_printer(ft::vector< std::string > const& vec) {
+void	vector_printer(ft::vector< std::string > & vec) {
 
 	ft::vector<std::string>::iterator itBeg = vec.begin();
 	ft::vector<std::string>::iterator itEnd = vec.end();
@@ -33,7 +33,6 @@ void	modifiers_tests(ft::vector< std::string >& vNorm,
 
 	ft::vector< std::string >	vMod;    
 	ft::vector< std::string >	vToInsert(10, "**80's music**");    
-	
 	std::cout << std::endl << "Let's start with an empty array and add a few elements with push_back():" << std::endl;
 	std::cout << "Add \"I\":" << std::endl;
 	vMod.push_back("I");
@@ -62,20 +61,24 @@ void	modifiers_tests(ft::vector< std::string >& vNorm,
 	std::cout << std::endl << "Now let's use assign() to alter another vector using this vector's elements" << std::endl;
 	std::cout << std::endl << "Receiving vector content before:" << std::endl;	
 	vector_printer(vToInsert);
+	std::cout << "Size: " << vMod.size() << "; Capacity: " << vMod.capacity() << ";" << std::endl << std::endl;
 
 	itBeg = vMod.begin();
 	itEnd = vMod.end();
 	vToInsert.assign(itBeg, itEnd);
 	std::cout << std::endl << "Receiving vector content after:" << std::endl;
 	vector_printer(vToInsert);
+	std::cout << "Size: " << vMod.size() << "; Capacity: " << vMod.capacity() << ";" << std::endl << std::endl;
 
 	std::cout << std::endl << "Now let's do it with the fill version of assign(), using 20 and \" MASTER, MASTER!\" as args:" << std::endl;
 	std::cout << std::endl << "Receiving vector content before:" << std::endl;
 	vector_printer(vToInsert);
-
+	std::cout << "Size: " << vMod.size() << "; Capacity: " << vMod.capacity() << ";" << std::endl << std::endl;
+	
 	std::cout << std::endl << "Receiving vector content after:" << std::endl;
 	vToInsert.assign(20, "MASTER, MASTER!");
 	vector_printer(vToInsert);
+	std::cout << "Size: " << vMod.size() << "; Capacity: " << vMod.capacity() << ";" << std::endl << std::endl;
 	
 	std::cout << std::endl << "Now pop_back(), it should remove an element without affecting the capacity:" << std::endl;
 
@@ -130,7 +133,7 @@ void	modifiers_tests(ft::vector< std::string >& vNorm,
 	vector_printer(vMod);
 	std::cout << "Size: " << vMod.size() << "; Capacity: " << vMod.capacity() << ";" << std::endl << std::endl;
 	
-	std::cout << "Now let's insert \"only\" at the 3 position (index 2):" << std::endl;
+	std::cout << "Now let's insert \"only\" at the third position (index 2):" << std::endl;
 	vMod.insert(vMod.begin() + 2, "only");
 	std::cout << "Vector content:" << std::endl;
 	vector_printer(vMod);
@@ -159,7 +162,7 @@ void	modifiers_tests(ft::vector< std::string >& vNorm,
 	std::cout << "Vector content:" << std::endl;
 	vector_printer(vMod);
 	std::cout << "Size: " << vMod.size() << "; Capacity: " << vMod.capacity() << ";" << std::endl << std::endl;
-	
+	std::cout << vNorm[0] << std::endl;
 	std::cout << "Let's erase the first 23 elements with erase():" << std::endl;
 
 	vMod.erase(vMod.begin(), vMod.begin() + 23);

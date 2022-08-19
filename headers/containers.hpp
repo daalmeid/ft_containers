@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 16:17:50 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/16 17:12:12 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/19 12:30:56 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,7 @@ void	modifiers_tests(ft::vector< std::string >& vNorm,
 void	operators_tests(ft::vector< std::string >& vNorm,
 						ft::vector<std::string>::iterator& itBeg,
 						ft::vector<std::string>::iterator& itEnd);
+void	vector_printer(ft::vector< std::string > & vec);
+void	iterator_tests(void);
 
 #endif
