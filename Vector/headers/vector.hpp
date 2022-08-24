@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 12:47:38 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/19 12:03:24 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/19 14:26:42 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ namespace ft
 
             /*Vector operators overload*/
 
-            vector& operator=(vector const& rhs) { /* What if they have different sizes????*/
+            vector& operator=(vector const& rhs) {
 
                 iterator    itBegin = const_cast<vector&>(rhs).begin();
                 iterator    itEnd = const_cast<vector&>(rhs).end();
@@ -106,13 +106,14 @@ namespace ft
 
             /*Iterator typedefs*/
             
-            typedef typename ft::iterator<pointer>       			iterator;
-            typedef typename ft::iterator<const_pointer>			const_iterator;
+            typedef typename ft::iterator<pointer>						iterator;
+            typedef typename ft::iterator<const_pointer>				const_iterator;
 
-            typedef typename ft::reverse_iterator<iterator>           reverse_iterator;
-            typedef typename ft::reverse_iterator<const_iterator>     const_reverse_iterator;
-
-            /*Iterator getters*/
+            typedef typename ft::reverse_iterator<iterator>				reverse_iterator;
+            typedef typename ft::reverse_iterator<const_iterator>		const_reverse_iterator;
+			typedef typename ft::iterator<iterator>::difference_type	difference_type;
+            
+			/*Iterator getters*/
 
             iterator            	begin(void) { return iterator(this->_start); };
             const_iterator      	begin(void) const { return const_iterator(this->_start); };
