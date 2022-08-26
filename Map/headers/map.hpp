@@ -105,20 +105,20 @@ namespace ft
 
 				if (_tree != NULL)
 				{				
-					node_destroyer(_tree);
+					tree_cleaner(_tree);
 					std::cout << "Destroying root node of " << _tree->content->first << std::endl;
 					std::cout << "sizeof node: " << sizeof(*_tree) << std::endl;
-					this->_alloc.destroy(_tree->content);
-					this->_alloc.deallocate(_tree->content, 1);
-					this->_treeAlloc.destroy(_tree);
-					this->_treeAlloc.deallocate(_tree, 1);
+					node_destroyer(_tree);
 				}
 			}
 
 			size_type	erase(const key_type& key) {
 
-
+				
+				_tree = recursiveDelete(_tree, key);
+				return 0;
 			};
+
 			/*CAPACITY FUNCTIONS*/
 
 			size_type	size(void) const { return _size; };
@@ -166,25 +166,27 @@ namespace ft
 			
 			void	node_destroyer(tree_node* node) {
 
+				this->_alloc.destroy(node->content);
+				this->_alloc.deallocate(node->content, 1);
+				this->_treeAlloc.destroy(node);
+				this->_treeAlloc.deallocate(node, 1);
+			}
+			
+			void	tree_cleaner(tree_node* node) {
+
 				if (node->lftNode != NULL)
 				{
 					if (node->lftNode->lftNode != NULL || node->lftNode->rgtNode != NULL)
-						node_destroyer(node->lftNode);
+						tree_cleaner(node->lftNode);
 					std::cout << "Destroying node of " << node->lftNode->content->first << std::endl;
-					this->_alloc.destroy(node->lftNode->content);
-					this->_alloc.deallocate(node->lftNode->content, 1);
-					this->_treeAlloc.destroy(node->lftNode);
-					this->_treeAlloc.deallocate(node->lftNode, 1);
+					node_destroyer(node->lftNode);
 				}
 				if (node->rgtNode != NULL)
 				{
 					if (node->rgtNode->lftNode != NULL || node->rgtNode->rgtNode != NULL)
-						node_destroyer(node->rgtNode);
+						tree_cleaner(node->rgtNode);
 					std::cout << "Destroying node of " << node->rgtNode->content->first << std::endl;
-					this->_alloc.destroy(node->rgtNode->content);
-					this->_alloc.deallocate(node->rgtNode->content, 1);
-					this->_treeAlloc.destroy(node->rgtNode);
-					this->_treeAlloc.deallocate(node->rgtNode, 1);
+					node_destroyer(node->rgtNode);
 				}
 			}
 			
@@ -232,6 +234,91 @@ namespace ft
 				}
 				return(ft::make_pair(node->content, false));
 			};
+
+
+			tree_node*	recursiveDelete(tree_node*& node, key_type key) {
+
+				if (!_comp(node->content->first, key) && _comp(key, node->content->first))
+				{
+					if (node->lftNode == NULL)
+						return node;
+					node->lftNode = recursiveDelete(node->lftNode, key);
+					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
+					return node;
+				}
+				else if (_comp(node->content->first, key))
+				{
+					if (node->rgtNode == NULL)
+						return node;
+					node->rgtNode = recursiveDelete(node->rgtNode, key);
+					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
+					return node;
+				}
+				else //key corresponds to this node
+				{
+					if (node->getHeight(node->lftNode) == 0 && node->getHeight(node->rgtNode) == 0)
+					{
+						node_destroyer(node);
+						_size--;
+						return NULL;
+					}
+					else if (node->getHeight(node->lftNode) > node->getHeight(node->rgtNode))
+						return node_locator_predecessor(node->lftNode, node);
+					else
+						return node_locator_successor(node->rgtNode, node);
+					return node;
+				}
+			}
+
+			tree_node*	node_locator_predecessor(tree_node*& node, tree_node*& node_to_del) {
+
+				if (node->rgtNode != NULL && node->rgtNode->rgtNode != NULL)
+					return node_locator_predecessor(node->rgtNode, node_to_del);
+				if (node->rgtNode == NULL)
+				{
+					node->rgtNode = node_to_del->rgtNode;
+					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
+					node_destroyer(node_to_del);
+					_size--;
+					return(node);
+				}
+				else
+				{
+					tree_node*	tmp = node->rgtNode;
+					node->rgtNode = node->rgtNode->lftNode;
+					tmp->lftNode = node_to_del->lftNode;
+					tmp->rgtNode = node_to_del->rgtNode;
+					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
+					node_destroyer(node_to_del);
+					_size--;
+					return(tmp);
+				}
+			}
+
+			tree_node*	node_locator_successor(tree_node*& node, tree_node*& node_to_del) {
+
+				if (node->lftNode != NULL && node->lftNode->lftNode != NULL)
+					return node_locator_successor(node->lftNode, node_to_del);
+				if (node->lftNode == NULL)
+				{
+					node->lftNode = node_to_del->lftNode;
+					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
+					node_destroyer(node_to_del);
+					_size--;
+					return(node);
+				}
+				else
+				{
+					tree_node*	tmp = node->lftNode;
+					node->lftNode = node->lftNode->rgtNode;
+					tmp->lftNode = node_to_del->lftNode;
+					tmp->rgtNode = node_to_del->rgtNode;
+					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
+					node_destroyer(node_to_del);
+					_size--;
+					return(tmp);
+				}
+			}
 
 			void	node_creator(tree_node*& node, const value_type& val) {
 
