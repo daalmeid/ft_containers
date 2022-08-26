@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 12:08:48 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/24 16:15:35 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/08/25 17:16:38 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ namespace ft
 	struct	node {
 		
 		int						height;
-		int						balance_factor;
 		node*					lftNode;
 		node*					rgtNode;
 		pair<const Key, Value>*	content;
