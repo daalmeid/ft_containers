@@ -23,13 +23,14 @@ namespace ft
 		int						height;
 		node*					lftNode;
 		node*					rgtNode;
+		node*					parent;
 		pair<const Key, Value>*	content;
 
 		node*	rebalance(void) {
 
-			if (height_balance() < -1 && lftNode->height_balance() == -1)
+			if (height_balance() < -1 && (lftNode->height_balance() == -1 || lftNode->height_balance() == 0))
 				return rotateRight();
-			else if (height_balance() > 1 && rgtNode->height_balance() == 1)
+			else if (height_balance() > 1 && (rgtNode->height_balance() == 1 || rgtNode->height_balance() == 0))
 				return rotateLeft();
 			else if (height_balance() < -1 && lftNode->height_balance() == 1)
 				return rotateLeftRight();
@@ -54,6 +55,10 @@ namespace ft
 
 			node*	tmp = this->lftNode;
 
+			tmp->parent = this->parent;
+			if (tmp->rgtNode != NULL)
+				tmp->rgtNode->parent = this;
+			this->parent = tmp;
 			this->lftNode = tmp->rgtNode;
 			tmp->rgtNode = this;
 
@@ -66,6 +71,10 @@ namespace ft
 
 			node*	tmp = this->rgtNode;
 
+			tmp->parent = this->parent;
+			if (tmp->lftNode != NULL)
+				tmp->lftNode->parent = this;
+			this->parent = tmp;
 			this->rgtNode = tmp->lftNode;
 			tmp->lftNode = this;
 
