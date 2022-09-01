@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   iterator.hpp                                       :+:      :+:    :+:   */
+/*   map_iterator.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 14:23:20 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/19 11:52:52 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/01 17:16:01 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,27 @@ namespace ft
 			typedef typename iterator_traits< std::iterator<std::bidirectional_iterator_tag, T> >::iterator_category	iterator_category;
 			
 			/*Iterator constructors*/
-			iterator(void): _ptr(NULL) {};
-			iterator(pointer ptr): _ptr(ptr) {};
+			iterator(void): _ptr(NULL), _M_node(NULL) {};
+			iterator(pointer ptr): _ptr(ptr) {
+
+				_M_node = _ptr;
+				while (_M_node->parent != NULL)
+					_M_node = _M_node->parent;
+			};
 			~iterator(void) {};
-			iterator(iterator const& cpy): _ptr(cpy._ptr) {};
+			iterator(iterator const& cpy): _ptr(cpy._ptr) {
+				
+				_M_node = _ptr;
+				while (_M_node->parent != NULL)
+					_M_node = _M_node->parent;
+			};
 			template <class Iter>
-			iterator(iterator<Iter, Value> const& cpy): _ptr(cpy.base()) {};
+			iterator(iterator<Iter, Value> const& cpy): _ptr(cpy.base()) {
+
+				_M_node = _ptr;
+				while (_M_node->parent != NULL)
+					_M_node = _M_node->parent;
+			};
 
 			/*operators*/
 			bool            operator==(iterator const& rhs) { return this->_ptr == rhs._ptr; };
@@ -42,7 +57,10 @@ namespace ft
 			iterator&       operator++(void) {
 				
 				if (_ptr->content == NULL)
+				{
+					_ptr = _ptr->parent;
 					return *this;
+				}
 				if (_ptr->rgtNode != NULL)
 					_ptr = node_locator_successor(_ptr->rgtNode);
 				else if (_ptr->parent != NULL)
@@ -77,9 +95,16 @@ namespace ft
 						return *this;
 					}
 					while (tmp != NULL && tmp->content->first > _ptr->content->first)
-						tmp = tmp->parent;
-					if (tmp != NULL)
-						_ptr = tmp;
+					{
+						if (tmp->parent != NULL)
+							tmp = tmp->parent;
+						else
+						{
+							_ptr = node_locator_predecessor(tmp); //In this context, will find the biggest node in the tree;
+							return *this;
+						}
+					}
+					_ptr = tmp;
 				}
 				return *this;
 			}; 
@@ -91,12 +116,14 @@ namespace ft
 				return temp;
 			};
 			
-			iterator&		operator=(iterator const& rhs) { this->_ptr = rhs._ptr; return *this; };
+			iterator&		operator=(iterator const& rhs) { this->_ptr = rhs._ptr; this->_M_node = rhs._M_node; return *this; };
 
 			Value&			operator*(void) { return *(this->_ptr->content); };
 			Value*			operator->(void) { return this->_ptr->content; };
 
 			pointer			base(void) const { return this->_ptr; };
+			
+			pointer			_M_node; // Is it necessary???????
 
 		private:
 

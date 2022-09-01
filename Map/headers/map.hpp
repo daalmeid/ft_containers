@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 13:00:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/26 20:51:26 by marvin           ###   ########.fr       */
+/*   Updated: 2022/09/01 18:48:18 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,15 +83,51 @@ namespace ft
 			template <class InputIterator>
   			map (InputIterator first, InputIterator last,
        				const key_compare& comp = key_compare(),
-       				const allocator_type& alloc = allocator_type()) {};
+       				const allocator_type& alloc = allocator_type()): _tree(NULL), _alloc(alloc), _comp(comp), _size(0) {
 			
-			map (const map& x) {};
+				_tree = _treeAlloc.allocate(1);
+				_tree->lftNode = NULL;
+				_tree->rgtNode = NULL;
+				_tree->parent = NULL;
+				_tree->content = NULL;
+				_tree->height = 0;
+				while (first != last)
+					insert(*first++);
 
-			~map(void) { this->tree_cleaner(_tree); this->_treeAlloc.deallocate(_tree, 1); }
+			};
+			
+			map (const map& x): _tree(NULL), _alloc(x._alloc), _comp(x._comp), _size(0) {
+
+				_tree = _treeAlloc.allocate(1);
+				_tree->lftNode = NULL;
+				_tree->rgtNode = NULL;
+				_tree->parent = NULL;
+				_tree->content = NULL;
+				_tree->height = 0;
+				*this = x;
+			};
+
+			~map(void) {
+				
+				this->tree_cleaner(_tree);
+				if (_tree->content != NULL)
+						node_destroyer(_tree);
+				else
+					this->_treeAlloc.deallocate(_tree, 1);
+			}
 			
 			/*OPERATOR= OVERLOAD*/
 
-			//map&	operator=(map const& rhs) {};
+			map&	operator=(map const& rhs) {
+
+				this->clear();
+				if (rhs._size != 0)
+				{
+					cpyInsert(rhs._tree);
+					this->insert(*(rhs._tree->content));
+				}
+				return *this;
+			};
 
 			/*ITERATORS*/
 			
@@ -179,7 +215,44 @@ namespace ft
 
 			/*ELEMENT ACCESS FUNCTIONS*/
 
+             mapped_type&			at(const key_type& key) { 
+                
+                iterator	itBeg = begin();
+                iterator	itEnd = end();
+				while (itBeg != itEnd)
+				{
+					if (itBeg->first == key)
+						return itBeg->second;
+					itBeg++;
+				}
+				throw std::out_of_range("map::at"); 
+            };
+            const mapped_type&		at(const key_type& key) const {
 
+                iterator	itBeg = begin();
+                iterator	itEnd = end();
+				while (itBeg != itEnd)
+				{
+					if (itBeg->first == key)
+						return itBeg->second;
+					itBeg++;
+				}
+				throw std::out_of_range("map::at"); 
+			};
+
+			mapped_type& operator[] (const key_type& key) {
+
+				iterator	itBeg = begin();
+                iterator	itEnd = end();
+				while (itBeg != itEnd)
+				{
+					if (itBeg->first == key)
+						return itBeg->second;
+					itBeg++;
+				}
+				this->insert(ft::make_pair(key, mapped_type()));
+				return itBeg->second;			// Fazer find primeiro!!
+			};
 			
 			/*HELPER FUNCTIONS*/
 
@@ -232,7 +305,20 @@ namespace ft
 			
 		private:
 		
-			
+			void	cpyInsert(tree_node* node) {
+
+				if (node->lftNode != NULL)
+				{
+					this->insert(*(node->lftNode->content));
+					cpyInsert(node->lftNode);
+				}
+				if (node->rgtNode != NULL && node->rgtNode->content != NULL)
+				{
+					this->insert(*(node->rgtNode->content));
+					cpyInsert(node->rgtNode);
+				}
+			};
+
 			void	node_destroyer(tree_node* node) {
 
 				this->_alloc.destroy(node->content);

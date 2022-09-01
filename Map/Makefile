@@ -34,7 +34,8 @@ INCLUDE	=		-I ./headers/
 
 SRCFILE	=		main.cpp\
 				PairTests.cpp\
-				ConstructorTests.cpp
+				ConstructorTests.cpp\
+				IteratorTests.cpp
 
 SRCCMP	=		$(addprefix srcs/, $(SRCFILE))
 
