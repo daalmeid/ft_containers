@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 16:17:50 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/01 18:47:59 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/02 16:17:19 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,5 @@
 void	pair_tests(void);
 void    constructor_tests(void);
 void	iterator_tests(void);
-
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 14:23:20 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/01 17:16:01 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/02 16:24:13 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@
 namespace ft
 {
 	template <class T, class Value>
-	class   iterator: public iterator_traits< std::iterator<std::bidirectional_iterator_tag, T> > {
+	class   iterator: public iterator_traits<T> {
 
 		public:
 			
-			typedef typename iterator_traits< std::iterator<std::bidirectional_iterator_tag, T> >::difference_type 		difference_type;
-			typedef typename iterator_traits< std::iterator<std::bidirectional_iterator_tag, T> >::value_type 			value_type;
-			typedef typename iterator_traits< std::iterator<std::bidirectional_iterator_tag, T> >::pointer 				pointer;
-			typedef typename iterator_traits< std::iterator<std::bidirectional_iterator_tag, T> >::reference 			reference;
-			typedef typename iterator_traits< std::iterator<std::bidirectional_iterator_tag, T> >::iterator_category	iterator_category;
+			typedef typename iterator_traits<T>::difference_type		difference_type;
+			typedef typename iterator_traits<T>::value_type				value_type;
+			typedef typename iterator_traits<T>::pointer				pointer;
+			typedef typename iterator_traits<T>::reference				reference;
+			typedef typename std::bidirectional_iterator_tag			iterator_category;
 			
 			/*Iterator constructors*/
 			iterator(void): _ptr(NULL), _M_node(NULL) {};

@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 15:21:39 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/22 12:35:57 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/02 12:40:32 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,9 @@ namespace ft {
 
 	template< class T1, class T2 >
 	pair<T1, T2>	make_pair( T1 t, T2 u ) { return (pair<T1, T2>(t, u)); };
+
+	template<class T1>
+	pair<T1, T1>	make_pair( T1 t, T1 u ) { return (pair<T1, T1>(t, u)); };
 }
 
 #endif
