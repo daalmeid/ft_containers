@@ -6,21 +6,22 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 16:40:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/02 17:46:47 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/05 17:36:50 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "m_containers.hpp"
 
 
+
 int	main(void) {
 
-	//pair_tests();
-	//constructor_tests();
+	// pair_tests();
+	// constructor_tests();
 	// iterator_tests();
-
+	// elem_access_tests();
+	
 	ft::map<int, std::string>	tester;
-
 
 	tester.insert(ft::make_pair(10, "Ten"));
 	tester.insert(ft::make_pair(2, "Two"));
@@ -40,15 +41,9 @@ int	main(void) {
 	tester.insert(ft::make_pair(153, "a lot"));
 	tester.insert(ft::make_pair(11, "eleven"));
 	tester.insert(ft::make_pair(6, "six"));
-
 	
 	// ft::map<int, std::string>::iterator	it = tester.find(1246);
 	// std::cout << (--it)->second << std::endl;
-
-	// std::string	testStr = tester.at(40);
-	// std::cout << testStr << std::endl;
-
-	// std::string	str = tester[1124];
 
 	// std::cout << str << std::endl;
 	// std::cout << tester.size() << std::endl;
@@ -89,51 +84,56 @@ int	main(void) {
 	tester2.insert(ft::make_pair(25, "twenty-five"));
 
 	// ft::map<int, std::string>::iterator	itBeg = tester.begin();
-	// ft::map<int, std::string>::iterator	itEnd = tester.end();
-	// swap(tester2, tester);
-	// while (itBeg != itEnd )
-	// 	std::cout << itBeg++->first << std::endl;	
+	ft::map<int, std::string>::iterator	itEnd = tester.end();
+	swap(tester2, tester);
+	// itEnd--;
+	// std::cout << itEnd--->first << std::endl;
+	// std::cout << itEnd--->first << std::endl;
 
-	std::cout << "Let's test comparisons between maps, using 2 maps with different sizes:" << std::endl << std::endl;
-	if (tester == tester2)
-        std::cout << "== operator is not working properly." << std::endl;
-    else
-        std::cout << "== operator is correct." << std::endl;
-    if (tester != tester2)
-        std::cout << "!= operator is correct." << std::endl;
-    else
-        std::cout << "!= operator is not working properly." << std::endl;
-    if (tester > tester2)
-        std::cout << "> operator is not working properly." << std::endl;
-    else
-        std::cout << "> operator is correct." << std::endl;
-    if (tester < tester2)
-        std::cout << "< operator is correct." << std::endl;
-    else
-        std::cout << "< operator is not working properly." << std::endl;
-    if (tester >= tester2)
-        std::cout << ">= operator is not working properly." << std::endl;
-    else
-        std::cout << ">= operator is correct." << std::endl;
-    if (tester <= tester2)
-        std::cout << "<= operator is correct." << std::endl;
-    else
-	{
-        std::cout << "<= operator is not working properly." << std::endl;
-	}
+	ft::map<int, std::string>::iterator	itBeg = tester.begin();
+	while (itBeg != itEnd )
+		std::cout << itBeg++->first << std::endl;	
 
-	ft::map<int, int>	mapInt;
+	// std::cout << "Let's test comparisons between maps, using 2 maps with different sizes:" << std::endl << std::endl;
+	// if (tester == tester2)
+    //     std::cout << "== operator is not working properly." << std::endl;
+    // else
+    //     std::cout << "== operator is correct." << std::endl;
+    // if (tester != tester2)
+    //     std::cout << "!= operator is correct." << std::endl;
+    // else
+    //     std::cout << "!= operator is not working properly." << std::endl;
+    // if (tester > tester2)
+    //     std::cout << "> operator is not working properly." << std::endl;
+    // else
+    //     std::cout << "> operator is correct." << std::endl;
+    // if (tester < tester2)
+    //     std::cout << "< operator is correct." << std::endl;
+    // else
+    //     std::cout << "< operator is not working properly." << std::endl;
+    // if (tester >= tester2)
+    //     std::cout << ">= operator is not working properly." << std::endl;
+    // else
+    //     std::cout << ">= operator is correct." << std::endl;
+    // if (tester <= tester2)
+    //     std::cout << "<= operator is correct." << std::endl;
+    // else
+	// {
+    //     std::cout << "<= operator is not working properly." << std::endl;
+	// }
 
-	mapInt.insert(ft::make_pair(5, 50));
-	mapInt.insert(ft::make_pair(9, 90));
-	mapInt.insert(ft::make_pair(2, 20));
+	// ft::map<int, int>	mapInt;
+
+	// mapInt.insert(ft::make_pair(5, 50));
+	// mapInt.insert(ft::make_pair(9, 90));
+	// mapInt.insert(ft::make_pair(2, 20));
 	
-	ft::map<int, int>::iterator	itBeg = mapInt.begin();
+	// ft::map<int, int>::iterator	itBeg = mapInt.begin();
 
-	std::cout << itBeg->first << std::endl;
+	// std::cout << itBeg->first << std::endl;
 
 	// *itBeg = ft::make_pair(30, "");
-	std::cout << itBeg->second << std::endl;
+	// std::cout << itBeg->second << std::endl;
 
 	//ft::map<int, std::string>::value_compare testComp = tester.value_comp();
 
@@ -167,7 +167,7 @@ int	main(void) {
     // {
 	// 	std::cout << "<= operator is correct." << std::endl;
 	// }
-	//tester.printMap(NULL);
+	// tester.printMap(NULL);
 	// std::cout << "Size before erase: " << tester.size() << std::endl;
 	// std::cout << "Element erased? " << tester.erase(13) << std::endl;
 	// std::cout << "Size: " << tester.size() << std::endl;
@@ -216,8 +216,11 @@ int	main(void) {
 	// std::cout << "Element erased? " << tester.erase(14) << std::endl;
 	// std::cout << "Size: " << tester.size() << std::endl;
 	// std::cout << "Element erased? " << tester.erase(14) << std::endl;
+	// std::cout << "Size: " << tester.size() << std::endl;
 
-	// tester.clear();
+	//tester.clear();
+	// std::cout << "Size: " << tester.size() << std::endl;
+
 	// for (size_t i = 500; i < 100000 ; i++)
 	// {
 	// 	tester.insert(ft::make_pair(i, "bla"));

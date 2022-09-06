@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 13:00:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/02 16:29:21 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/05 17:24:59 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,7 @@ namespace ft
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
 				_tree->parent = NULL;
-				_tree->content = NULL;
-				_tree->height = 0;
+				_tree->height = 1;
 			};
 
 			template <class InputIterator>
@@ -89,8 +88,7 @@ namespace ft
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
 				_tree->parent = NULL;
-				_tree->content = NULL;
-				_tree->height = 0;
+				_tree->height = 1;
 				while (first != last)
 					insert(*first++);
 
@@ -102,15 +100,14 @@ namespace ft
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
 				_tree->parent = NULL;
-				_tree->content = NULL;
-				_tree->height = 0;
+				_tree->height = 1;
 				*this = x;
 			};
 
 			~map(void) {
 				
 				this->tree_cleaner(_tree);
-				if (_tree->content != NULL)
+				if (_size != 0)
 						node_destroyer(_tree);
 				else
 					this->_treeAlloc.deallocate(_tree, 1);
@@ -135,11 +132,14 @@ namespace ft
 				
 				tree_node*	first = _tree;
 
-				if (first != NULL)
+				if (_size == 0)
 				{
-					while (first->lftNode != NULL)
-						first = first->lftNode;
-				}
+					iterator	emptyVec(first);
+					emptyVec++;
+					return emptyVec;
+				}	
+				while (first->lftNode != NULL)
+					first = first->lftNode;
 				return iterator(first);
 			};
 
@@ -147,12 +147,14 @@ namespace ft
 				
 				tree_node*	first = _tree;
 
-				std::cout << "Here" << std::endl;
-				if (first != NULL)
+				if (_size == 0)
 				{
+					const_iterator	emptyVec(first);
+					emptyVec++;
+					return emptyVec;
+				}	
 					while (first->lftNode != NULL)
 						first = first->lftNode;
-				}
 				return const_iterator(first);
 			};
 
@@ -160,39 +162,32 @@ namespace ft
 			
 				tree_node*	last = _tree;
 
-				if (last != NULL)
-				{
-					while (last->rgtNode != NULL)
-						last = last->rgtNode;
-				}
-				return iterator(last);
+				while (last->rgtNode != NULL)
+					last = last->rgtNode;
+				iterator	returner(last);
+				returner++;
+				return returner;
 			}
 
 			const_iterator	end(void) const {
 			
 				tree_node*	last = _tree;
 
-				if (last != NULL)
-				{
-					while (last->rgtNode != NULL)
-						last = last->rgtNode;
-				}
-				return const_iterator(last);
+				while (last->rgtNode != NULL)
+					last = last->rgtNode;
+				const_iterator	returner(last);
+				returner++;
+				return returner;
 			}
 
 			/*MODIFIERS FUNCTIONS*/
 
 			ft::pair<pointer, bool>	insert(const value_type& val) {
 
-				if (this->_tree->content == NULL)
+				if (_size == 0)
 				{
-					tree_node*	newNode;
-					tree_node*	tmp = _tree;
-
-					node_creator(newNode, val);
-					_tree = newNode;
-					_tree->rgtNode = tmp;
-					tmp->parent = _tree;
+					_tree->content = this->_alloc.allocate(1);
+					this->_alloc.construct(_tree->content, val);
 					_size++;
 					return ft::make_pair(_tree->content, true);
 				}
@@ -207,16 +202,14 @@ namespace ft
 			void	clear(void) {
 		
 				tree_cleaner(_tree);
-				if (_tree->content == NULL)
-					this->_treeAlloc.deallocate(_tree, 1);
-				else
-					node_destroyer(_tree);
-				_tree = _treeAlloc.allocate(1);
+				if (_size != 0)
+				{
+					this->_alloc.destroy(_tree->content);
+					this->_alloc.deallocate(_tree->content, 1);
+				}
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
-				_tree->parent = NULL;
-				_tree->content = NULL;
-				_tree->height = 0;
+				_tree->height = 1;
 				_size = 0;
 			}
 
@@ -224,32 +217,28 @@ namespace ft
 
 				int	ret_val = 1;
 
-				if (_tree->content == NULL)
+				if (_size == 0)
 					return 0;
 				_tree = recursiveErase(_tree, key, ret_val);
-				if (_tree->content != NULL)
+				if (_size != 0)
 					_tree = _tree->rebalance();
 				return ret_val;
 			};
 
-			void		swap(map& other) { //issue with the null being still valid for iteration when(apparently) it shouldn't
+			void		swap(map& other) { //issue with the null being still valid for iteration when(apparently) it shouldn't(maybe solved)
 
-				tree_node*	swapper = this->_tree;
-
+				tree_node*		treeSwap = this->_tree;
+				allocator_type	allocSwap = this->_alloc;
+				key_compare		compSwap = this->_comp;
+				size_type		sizeSwap = this->_size;
 				this->_tree = other._tree;
-				other._tree = swapper;
-
-				// tree_node*	nullParent = this->findNullElem();
-				// if (nullParent->parent != NULL)
-				// 	nullParent = nullParent->parent;
-				
-				// tree_node*	nullParentOther = other.findNullElem();
-				// if (nullParent->parent != NULL)
-				// 	nullParentOther = nullParentOther->parent;
-
-				// swapper = nullParent->rgtNode;
-				// nullParent->rgtNode = nullParentOther->rgtNode;
-				// nullParentOther->rgtNode = swapper;
+				this->_alloc = other._alloc;
+				this->_comp = other._comp;
+				this->_size = other._size;
+				other._tree = treeSwap;
+				other._alloc = allocSwap;
+				other._comp = compSwap;
+				other._size = sizeSwap;
 			};
 
 			/*CAPACITY FUNCTIONS*/
@@ -305,14 +294,14 @@ namespace ft
 
 			iterator		find(const key_type& key) {
 
-				if (_tree->content != NULL)
+				if (_size != 0)
 					return (recursiveFind(_tree, key));
 				return (this->end());
 			};
 
 			const_iterator	find(const key_type& key) const {
 
-				if (_tree->content != NULL)
+				if (_size != 0)
 				{
 					const_iterator retIt = recursiveFind(_tree, key);
 					return retIt;
@@ -457,7 +446,7 @@ namespace ft
 					std::cout << "the NULL node." << std::endl;
 				else
 					std::cout << "real." << std::endl;
-				if (node->parent != NULL)
+				if (node != _tree && node->parent != NULL)
 					std::cout << "PARENT KEY: " << node->parent->content->first << std::endl;
 				std::cout << "Height of this node is: " << node->height << std::endl << std::endl;
 				if (node->lftNode != NULL)
@@ -552,16 +541,12 @@ namespace ft
 				}
 				else if (_comp(node->content->first, val.first))
 				{
-					if (node->rgtNode == NULL || node->rgtNode->content == NULL)
+					if (node->rgtNode == NULL)
 					{
 						tree_node*	tmp;
-						tree_node*	nullNode = node->rgtNode;
-						
+
 						node_creator(tmp, val);
 						node->rgtNode = tmp;
-						node->rgtNode->rgtNode = nullNode;
-						if (nullNode != NULL)
-							nullNode->parent = node->rgtNode;
 						_size++;
 						node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
 						node->rgtNode->parent = node;
@@ -601,7 +586,7 @@ namespace ft
 				}
 				else if (_comp(node->content->first, key))
 				{
-					if (node->rgtNode == NULL || node->rgtNode->content == NULL)
+					if (node->rgtNode == NULL)
 					{
 						ret_val = 0;
 						return node;
@@ -615,12 +600,19 @@ namespace ft
 				{
 					if (node->getHeight(node->lftNode) == 0 && node->getHeight(node->rgtNode) == 0)
 					{
-						tree_node* tmp = node->rgtNode;
-						if (tmp != NULL)
-							tmp->parent = node->parent;
-						node_destroyer(node);
-						_size--;
-						return tmp;
+						if (node != _tree)
+						{
+							node_destroyer(node);
+							_size--;
+							return NULL;
+						}
+						else
+						{
+							this->_alloc.destroy(_tree->content);
+							this->_alloc.deallocate(_tree->content, 1);
+							_size--;
+							return _tree;
+						}
 					}
 					else if (node->getHeight(node->lftNode) >= node->getHeight(node->rgtNode))
 					{
@@ -732,7 +724,7 @@ namespace ft
 				}
 				else if (_comp(node->content->first, key))
 				{
-					if (node->rgtNode == NULL || node->rgtNode->content == NULL)
+					if (node->rgtNode == NULL)
 					{
 						tree_node*	last = _tree;
 						while (last->rgtNode != NULL)
@@ -755,20 +747,11 @@ namespace ft
 				node->parent = NULL;
 				node->height = 1;
 			};
-
-			tree_node*	findNullElem(void)
-			{
-				tree_node*	node = _tree;
-
-				while (node->content != NULL)
-					node = node->rgtNode;
-				return node;
-			}
 			
 			/*Private Variables*/
 
 			tree_node*					_tree;
-            allocator_type				_alloc;
+			allocator_type				_alloc;
 			std::allocator<tree_node>	_treeAlloc;
 			key_compare					_comp;
 			size_type					_size;
