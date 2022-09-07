@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 14:23:20 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/05 17:05:40 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/07 17:16:36 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,20 @@ namespace ft
 			
 			iterator(pointer ptr): _ptr(ptr) {
 
-				_M_node = _ptr;
-				while (_M_node->parent != NULL)
-					_M_node = _M_node->parent;
+				
+			
+				if (_ptr->parent == NULL)
+					_M_node = _ptr->lftNode;
+				else
+				{
+					_M_node = _ptr;
+					while (_M_node->parent != NULL)
+					{
+						_M_node = _M_node->parent;
+					}
+					_M_node = _M_node->lftNode;
+				}
+
 			};
 			
 			~iterator(void) {};
@@ -45,11 +56,11 @@ namespace ft
 			iterator(iterator<Iter, Value> const& cpy): _M_node(cpy._M_node), _ptr(cpy.base()) {};
 
 			/*operators*/
-			bool            operator==(iterator const& rhs) { return this->_ptr == rhs._ptr && this->_M_node == rhs._M_node; };
-			bool            operator!=(iterator const& rhs) { return this->_ptr != rhs._ptr || this->_M_node != rhs._M_node; };
+			bool            operator==(iterator const& rhs) { return this->_ptr == rhs._ptr; };
+			bool            operator!=(iterator const& rhs) { return this->_ptr != rhs._ptr; };
 			
 			iterator&       operator++(void) {
-				
+								
 				if (_ptr == node_locator_predecessor(_M_node))
 				{
 					_ptr = _M_node->parent;
@@ -61,19 +72,24 @@ namespace ft
 					return *this;
 				}
 				if (_ptr->rgtNode != NULL)
+				{
 					_ptr = node_locator_successor(_ptr->rgtNode);
-				else if (_ptr->parent != NULL)
+				}
+				else if (_ptr != _M_node)
 				{
 					pointer tmp = _ptr->parent;
 
 					while (tmp != NULL && tmp->content->first < _ptr->content->first)
+					{
 						tmp = tmp->parent;
+					}
 					if (tmp != NULL)
 						_ptr = tmp;
 				}
 				return *this;
 			}; 
 			iterator        operator++(int) { 
+				
 				iterator temp(*this);
 				
 				this->operator++();
@@ -82,14 +98,14 @@ namespace ft
 
 			iterator&		operator--(void) {
 
-				if (_ptr == NULL)
+				if (_ptr == _M_node->parent)
 				{
 					_ptr = node_locator_predecessor(_M_node); //In this context, will find the biggest node in the tree;
 					return *this;
 				}
 				if (_ptr->lftNode != NULL)
 					_ptr = node_locator_predecessor(_ptr->lftNode);
-				else if (_ptr->parent != NULL)
+				else if (_ptr != _M_node)
 				{
 					pointer tmp = _ptr->parent;
 
@@ -100,7 +116,7 @@ namespace ft
 					_ptr = tmp;
 				}
 				else
-					_ptr = NULL;
+					_ptr = _M_node->parent;
 				return *this;
 			};
 

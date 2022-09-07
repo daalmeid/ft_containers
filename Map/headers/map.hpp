@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 13:00:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/05 17:24:59 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/07 17:45:07 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include  "pair.hpp"
 # include  "node.hpp"
 # include "map_iterator.hpp"
+# include "map_reverse_iterator.hpp"
+
 
 namespace ft
 {
@@ -32,21 +34,21 @@ namespace ft
 		public:
 
 			/*member types*/
-			typedef Key													key_type;
-			typedef T                                           		mapped_type;
-			typedef ft::pair<const key_type, mapped_type>				value_type;
-			typedef Compare												key_compare;
-			typedef Alloc												allocator_type;
-			typedef typename allocator_type::reference					reference;
-			typedef typename allocator_type::const_reference			const_reference;
-			typedef typename allocator_type::pointer					pointer;
-			typedef typename allocator_type::const_pointer				const_pointer;
-			typedef	typename ft::node<key_type, mapped_type>			tree_node;
-			typedef typename ft::iterator<tree_node*, value_type>		iterator;
-			typedef typename ft::iterator<const tree_node*, const value_type>	const_iterator;
-			//typedef typename ft::reverse_iterator<iterator>			reverse_iterator;
-			//typedef typename ft::reverse_iterator<const_iterator>	const_reverse_iterator;
-			typedef size_t												size_type;
+			typedef Key																key_type;
+			typedef T                                           					mapped_type;
+			typedef ft::pair<const key_type, mapped_type>							value_type;
+			typedef Compare															key_compare;
+			typedef Alloc															allocator_type;
+			typedef typename allocator_type::reference								reference;
+			typedef typename allocator_type::const_reference						const_reference;
+			typedef typename allocator_type::pointer								pointer;
+			typedef typename allocator_type::const_pointer							const_pointer;
+			typedef	typename ft::node<key_type, mapped_type>						tree_node;
+			typedef typename ft::iterator<tree_node*, value_type>					iterator;
+			typedef typename ft::iterator<const tree_node*, const value_type>		const_iterator;
+			typedef typename ft::map_reverse_iterator<iterator, value_type>				reverse_iterator;
+			typedef typename ft::map_reverse_iterator<const_iterator, value_type>		const_reverse_iterator;
+			typedef size_t															size_type;
 			// typedef typename ft::iterator<iterator>::difference_type	difference_type;
 
 			class value_compare: public std::binary_function<value_type, value_type, bool> {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
@@ -75,8 +77,12 @@ namespace ft
 				_tree = _treeAlloc.allocate(1);
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
-				_tree->parent = NULL;
 				_tree->height = 1;
+				_pastTheEndNode = _treeAlloc.allocate(1);
+				_pastTheEndNode->content = _alloc.allocate(1);
+				_pastTheEndNode->lftNode = _tree;
+				_tree->parent = _pastTheEndNode;
+				_pastTheEndNode->parent = NULL;
 			};
 
 			template <class InputIterator>
@@ -87,11 +93,14 @@ namespace ft
 				_tree = _treeAlloc.allocate(1);
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
-				_tree->parent = NULL;
 				_tree->height = 1;
 				while (first != last)
 					insert(*first++);
-
+				_pastTheEndNode = _treeAlloc.allocate(1);
+				_pastTheEndNode->content = _alloc.allocate(1);
+				_pastTheEndNode->lftNode = _tree;
+				_tree->parent = _pastTheEndNode;
+				_pastTheEndNode->parent = NULL;
 			};
 			
 			map (const map& x): _tree(NULL), _alloc(x._alloc), _comp(x._comp), _size(0) {
@@ -99,9 +108,13 @@ namespace ft
 				_tree = _treeAlloc.allocate(1);
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
-				_tree->parent = NULL;
 				_tree->height = 1;
 				*this = x;
+				_pastTheEndNode = _treeAlloc.allocate(1);
+				_pastTheEndNode->content = _alloc.allocate(1);
+				_pastTheEndNode->lftNode = _tree;
+				_tree->parent = _pastTheEndNode;
+				_pastTheEndNode->parent = NULL;
 			};
 
 			~map(void) {
@@ -111,6 +124,8 @@ namespace ft
 						node_destroyer(_tree);
 				else
 					this->_treeAlloc.deallocate(_tree, 1);
+				_alloc.deallocate(_pastTheEndNode->content, 1);
+				 _treeAlloc.deallocate(_pastTheEndNode, 1);
 			}
 			
 			/*OPERATOR= OVERLOAD*/
@@ -134,12 +149,14 @@ namespace ft
 
 				if (_size == 0)
 				{
-					iterator	emptyVec(first);
+					iterator	emptyVec(_tree);
 					emptyVec++;
 					return emptyVec;
 				}	
-				while (first->lftNode != NULL)
+				while (first->lftNode != NULL) {
+
 					first = first->lftNode;
+				}
 				return iterator(first);
 			};
 
@@ -149,7 +166,7 @@ namespace ft
 
 				if (_size == 0)
 				{
-					const_iterator	emptyVec(first);
+					const_iterator	emptyVec(_tree);
 					emptyVec++;
 					return emptyVec;
 				}	
@@ -161,7 +178,6 @@ namespace ft
 			iterator	end(void) {
 			
 				tree_node*	last = _tree;
-
 				while (last->rgtNode != NULL)
 					last = last->rgtNode;
 				iterator	returner(last);
@@ -172,13 +188,19 @@ namespace ft
 			const_iterator	end(void) const {
 			
 				tree_node*	last = _tree;
-
 				while (last->rgtNode != NULL)
 					last = last->rgtNode;
 				const_iterator	returner(last);
 				returner++;
 				return returner;
 			}
+
+			/*REVERSE ITERATORS*/
+
+			reverse_iterator    	rend(void) { reverse_iterator rEndIt(this->begin()); return rEndIt; };
+            const_reverse_iterator	rend(void) const { const_reverse_iterator cRevEndIt((this->begin())); return cRevEndIt; };
+			reverse_iterator    	rbegin(void) { reverse_iterator rBegIt(this->end()); return rBegIt; };
+            const_reverse_iterator	rbegin(void) const { const_reverse_iterator cRevBegIt((this->end())); return cRevBegIt; };
 
 			/*MODIFIERS FUNCTIONS*/
 
@@ -195,6 +217,8 @@ namespace ft
 				{
 					ft::pair<pointer, bool>	returner = recursiveInsert(_tree, val);
 					_tree = _tree->rebalance();
+					_pastTheEndNode->lftNode = _tree;
+					_tree->parent = _pastTheEndNode;
 					return (returner);
 				}
 			};
@@ -211,6 +235,8 @@ namespace ft
 				_tree->rgtNode = NULL;
 				_tree->height = 1;
 				_size = 0;
+				_pastTheEndNode->lftNode = _tree;
+				_tree->parent = _pastTheEndNode;
 			}
 
 			size_type	erase(const key_type& key) {
@@ -222,6 +248,8 @@ namespace ft
 				_tree = recursiveErase(_tree, key, ret_val);
 				if (_size != 0)
 					_tree = _tree->rebalance();
+				_pastTheEndNode->lftNode = _tree;
+				_tree->parent = _pastTheEndNode;
 				return ret_val;
 			};
 
@@ -229,16 +257,19 @@ namespace ft
 
 				tree_node*		treeSwap = this->_tree;
 				allocator_type	allocSwap = this->_alloc;
-				key_compare		compSwap = this->_comp;
 				size_type		sizeSwap = this->_size;
+				
+				std::swap(this->_comp, other._comp);
 				this->_tree = other._tree;
 				this->_alloc = other._alloc;
-				this->_comp = other._comp;
 				this->_size = other._size;
 				other._tree = treeSwap;
 				other._alloc = allocSwap;
-				other._comp = compSwap;
 				other._size = sizeSwap;
+				this->_tree->parent = this->_pastTheEndNode;
+				this->_pastTheEndNode->lftNode = this->_tree;
+				other._tree->parent = other._pastTheEndNode;
+				other._pastTheEndNode->lftNode = other._tree;
 			};
 
 			/*CAPACITY FUNCTIONS*/
@@ -646,6 +677,7 @@ namespace ft
 					node->rgtNode = node_to_del->rgtNode;
 					if (node->rgtNode != NULL)
 						node->rgtNode->parent = node;
+					node->parent = node_to_del->parent;
 					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
 					node_destroyer(node_to_del);
 					_size--;
@@ -663,7 +695,6 @@ namespace ft
 					tmp->rgtNode = node_to_del->rgtNode;
 					if (tmp->rgtNode != NULL)
 						tmp->rgtNode->parent = tmp;
-
 					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
 					node_destroyer(node_to_del);
 					_size--;
@@ -685,6 +716,7 @@ namespace ft
 					node->lftNode = node_to_del->lftNode;
 					if (node->lftNode != NULL)
 						node->lftNode->parent = node;
+					node->parent = node_to_del->parent;
 					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
 					node_destroyer(node_to_del);
 					_size--;
@@ -698,10 +730,10 @@ namespace ft
 						node->lftNode->parent = node;
 					tmp->lftNode = node_to_del->lftNode;
 					if (tmp->lftNode != NULL)
-					tmp->lftNode->parent = tmp;
+						tmp->lftNode->parent = tmp;
 					tmp->rgtNode = node_to_del->rgtNode;
 					if (tmp->rgtNode != NULL)
-					tmp->rgtNode->parent = tmp;
+						tmp->rgtNode->parent = tmp;
 					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
 					node_destroyer(node_to_del);
 					_size--;
@@ -751,6 +783,7 @@ namespace ft
 			/*Private Variables*/
 
 			tree_node*					_tree;
+			tree_node*					_pastTheEndNode;
 			allocator_type				_alloc;
 			std::allocator<tree_node>	_treeAlloc;
 			key_compare					_comp;

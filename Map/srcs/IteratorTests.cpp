@@ -94,15 +94,21 @@ void	iterator_tests(void) {
 	
 	std::cout << "Operator* - We can dereference an iterator to attribute the value it points to to a ft::pair variable compatible:" << std::endl;
 	
-	// itBeg++;
-	// itBeg++;
 	ft::pair<int, std::string>	testPair = *itBeg;
 	std::cout << "Key of element of iterator: " << itBeg->first << std::endl;
 	std::cout << "Key of created pair: " << testPair.first << std::endl;
 	std::cout << "Value of element of iterator: " << itBeg->second << std::endl;
 	std::cout << "Value of created pair: " << testPair.second << std::endl;
 
-	std::cout << "Comparisons: " << std::endl << std::endl;
+	std::cout << std::endl << "Does changing a mapped element work? " << std::endl;
+	
+	itEnd = tester.end();
+	itBeg = tester.begin();
+	itBeg->second = "WOOOOH We're halfway there!";
+	while (itBeg != itEnd)
+		std::cout << "key: " << itBeg->first << "; Value: " << itBeg++->second << std::endl;
+
+	std::cout << std::endl << "Comparisons: " << std::endl << std::endl;
 
 	itBeg = tester.begin();
 	itEnd = tester.begin();
@@ -119,4 +125,48 @@ void	iterator_tests(void) {
 	else
 		std::cout << "!= has an error" << std::endl;
 
+	std::cout << ".**********************************." << std::endl;
+	std::cout << "|      Reverse Iterator Tests      |" << std::endl;
+	std::cout << " ********************************** " << std::endl << std::endl;
+
+	std::cout << "Let's declare 2 reverse iterators with rbegin() and rend() and increment rbegin until it's the same as rend:" << std::endl;
+
+	ft::map<int, std::string>::reverse_iterator	revItBeg = tester.rbegin();
+    ft::map<int, std::string>::reverse_iterator	revItEnd = tester.rend();
+
+	while (revItBeg != revItEnd)
+		std::cout << "key: " << revItBeg->first << "; Value: " << revItBeg++->second << std::endl;
+	
+	std::cout << std::endl << "If we continue to increment, the iterator will go back to the start: " << std::endl;
+	revItBeg++;
+	while (revItBeg != revItEnd)
+		std::cout << "key: " << revItBeg->first << "; Value: " << revItBeg++->second << std::endl;
+	
+	std::cout << std::endl << "Now let's try to decrement rend until it reaches rbegin: " << std::endl;
+	revItBeg = tester.rbegin();
+	while (revItBeg != revItEnd)
+		std::cout << "key: " << (--revItEnd)->first << "; Value: " << revItEnd->second << std::endl;
+	
+	std::cout << std::endl << "Does changing a mapped element work? " << std::endl;
+	revItEnd = tester.rend();
+	revItBeg->second = "TROLOLO";
+	while (revItBeg != revItEnd)
+		std::cout << "key: " << revItBeg->first << "; Value: " << revItBeg++->second << std::endl;
+	
+	std::cout << std::endl << "Comparisons: " << std::endl << std::endl;
+
+	revItBeg = tester.rbegin();
+	revItEnd = tester.rbegin();
+
+	if (revItBeg == revItEnd)
+		std::cout << "== works properly" << std::endl;
+	else
+		std::cout << "== has an error" << std::endl;
+
+	revItEnd++;
+
+	if (revItBeg != revItEnd)
+		std::cout << "!= works properly" << std::endl;
+	else
+		std::cout << "!= has an error" << std::endl;
 }

@@ -6,14 +6,14 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 16:17:50 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/05 17:32:29 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/07 16:20:58 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef M_CONTAINERS_HPP
 # define M_CONTAINERS_HPP
 
-# if 1
+# if 0
 	#include <map>
 	#include <utility>
 	
@@ -28,5 +28,7 @@ void	pair_tests(void);
 void    constructor_tests(void);
 void	iterator_tests(void);
 void	elem_access_tests(void);
+void    modifiers_tests(void);
+
 
 #endif
