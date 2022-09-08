@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 12:22:48 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/01 17:15:30 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/08 18:39:09 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,35 +59,35 @@ void    constructor_tests(void) {
 
 	ft::map<int, std::string>	newIterMap(itBeg, itEnd);
 	
-	ft::map<int, std::string>	newCpyMap(newIterMap);
+	// ft::map<int, std::string>	newCpyMap(newIterMap);
 
 	std::cout << "Original map content:" << std::endl;
 	while (itBeg != itEnd)
 		std::cout << "Key: " << itBeg->first << ", Value: " << itBeg++->second << "; ";
 	std::cout << std::endl << std::endl;
 	
-	std::cout << "Iterator map content:" << std::endl;
-	itBeg = newIterMap.begin();
-	itEnd = newIterMap.end();
-	while (itBeg != itEnd)
-		std::cout << "Key: " << itBeg->first << ", Value: " << itBeg++->second << "; ";
-	std::cout << std::endl << std::endl;
+	// std::cout << "Iterator map content:" << std::endl;
+	// itBeg = newIterMap.begin();
+	// itEnd = newIterMap.end();
+	// while (itBeg != itEnd)
+	// 	std::cout << "Key: " << itBeg->first << ", Value: " << itBeg++->second << "; ";
+	// std::cout << std::endl << std::endl;
 
-	std::cout << "Copy map content:" << std::endl;
-	itBeg = newCpyMap.begin();
-	itEnd = newCpyMap.end();
-	while (itBeg != itEnd)
-		std::cout << "Key: " << itBeg->first << ", Value: " << itBeg++->second << "; ";
-	std::cout << std::endl << std::endl;
+	// std::cout << "Copy map content:" << std::endl;
+	// itBeg = newCpyMap.begin();
+	// itEnd = newCpyMap.end();
+	// while (itBeg != itEnd)
+	// 	std::cout << "Key: " << itBeg->first << ", Value: " << itBeg++->second << "; ";
+	// std::cout << std::endl << std::endl;
 
 
 
-	std::cout << ".**********************************." << std::endl;
-	std::cout << "|          Capacity tests          |" << std::endl;
-	std::cout << " ********************************** " << std::endl << std::endl;
+	// std::cout << ".**********************************." << std::endl;
+	// std::cout << "|          Capacity tests          |" << std::endl;
+	// std::cout << " ********************************** " << std::endl << std::endl;
 
-	std::cout << "Empty map - Size: " << emptyMap.size() << ", max size: " << emptyMap.max_size() << "; is it empty? 1 if yes: " << emptyMap.empty() << std::endl;
-	std::cout << "Map with 18 elements - Size: " << tester.size() << ", max size: " << tester.max_size() << "; is it empty? 1 if yes: " << tester.empty() << std::endl;
-	std::cout << "NOTE: Max_size might be different due to the size of my tree element being smaller than the one of std." << std::endl;
+	// std::cout << "Empty map - Size: " << emptyMap.size() << ", max size: " << emptyMap.max_size() << "; is it empty? 1 if yes: " << emptyMap.empty() << std::endl;
+	// std::cout << "Map with 18 elements - Size: " << tester.size() << ", max size: " << tester.max_size() << "; is it empty? 1 if yes: " << tester.empty() << std::endl;
+	// std::cout << "NOTE: Max_size might be different due to the size of my tree element being smaller than the one of std." << std::endl;
 
 }

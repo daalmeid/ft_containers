@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 14:23:20 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/07 17:16:36 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/08 18:55:48 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ namespace ft
 			
 			iterator&       operator++(void) {
 								
+				m_node_update();
 				if (_ptr == node_locator_predecessor(_M_node))
 				{
 					_ptr = _M_node->parent;
@@ -98,6 +99,7 @@ namespace ft
 
 			iterator&		operator--(void) {
 
+				m_node_update();
 				if (_ptr == _M_node->parent)
 				{
 					_ptr = node_locator_predecessor(_M_node); //In this context, will find the biggest node in the tree;
@@ -109,7 +111,7 @@ namespace ft
 				{
 					pointer tmp = _ptr->parent;
 
-					while (tmp != NULL && tmp->content->first > _ptr->content->first)
+					while (tmp != _M_node->parent && tmp->content->first > _ptr->content->first)
 					{
 						tmp = tmp->parent;
 					}
@@ -153,6 +155,15 @@ namespace ft
 				if (node->rgtNode != NULL)
 					return node_locator_predecessor(node->rgtNode);
 				return(node);
+			}
+
+			void	m_node_update(void) {
+
+				_M_node = _ptr;
+
+				while (_M_node->parent != NULL)
+					_M_node = _M_node->parent;
+				_M_node = _M_node->lftNode;
 			}
 	};
 

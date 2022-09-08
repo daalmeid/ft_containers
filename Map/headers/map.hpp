@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 13:00:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/07 17:45:07 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/08 18:39:59 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ namespace ft
 				protected:
 
 					Compare comp;
-					value_compare (Compare c) : comp(c) {}  // constructed with map's comparison object
+					value_compare(Compare c) : comp(c) {}  // constructed with map's comparison object
 				public:
 
 					typedef bool 		result_type;
@@ -94,13 +94,14 @@ namespace ft
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
 				_tree->height = 1;
-				while (first != last)
-					insert(*first++);
 				_pastTheEndNode = _treeAlloc.allocate(1);
 				_pastTheEndNode->content = _alloc.allocate(1);
 				_pastTheEndNode->lftNode = _tree;
 				_tree->parent = _pastTheEndNode;
 				_pastTheEndNode->parent = NULL;
+				while (first != last)
+					insert(*(first++));
+				// std::cout << "Here" << std::endl;
 			};
 			
 			map (const map& x): _tree(NULL), _alloc(x._alloc), _comp(x._comp), _size(0) {
@@ -321,7 +322,7 @@ namespace ft
 			};
 			
 			
-			/*OPERATIONS*/
+			/*LOOKUP OPERATIONS*/
 
 			iterator		find(const key_type& key) {
 
@@ -695,6 +696,7 @@ namespace ft
 					tmp->rgtNode = node_to_del->rgtNode;
 					if (tmp->rgtNode != NULL)
 						tmp->rgtNode->parent = tmp;
+					tmp->parent = node_to_del->parent;
 					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
 					node_destroyer(node_to_del);
 					_size--;
@@ -734,6 +736,7 @@ namespace ft
 					tmp->rgtNode = node_to_del->rgtNode;
 					if (tmp->rgtNode != NULL)
 						tmp->rgtNode->parent = tmp;
+					tmp->parent = node_to_del->parent;
 					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
 					node_destroyer(node_to_del);
 					_size--;
@@ -741,32 +744,40 @@ namespace ft
 				}
 			}
 
-			iterator recursiveFind(tree_node* node, const key_type& key) const {
+			iterator recursiveFind(tree_node* node, const key_type& key) {
 
 				if (!_comp(node->content->first, key) && _comp(key, node->content->first))
 				{
 					if (node->lftNode == NULL)
-					{
-						tree_node*	last = _tree;
-						while (last->rgtNode != NULL)
-						last = last->rgtNode;
-						return iterator(last);
-					}
+						return iterator(_tree->parent);
 					return recursiveFind(node->lftNode, key);
 				}
 				else if (_comp(node->content->first, key))
 				{
 					if (node->rgtNode == NULL)
-					{
-						tree_node*	last = _tree;
-						while (last->rgtNode != NULL)
-						last = last->rgtNode;
-						return iterator(last);
-					}
+						return iterator(_tree->parent);
 					return recursiveFind(node->rgtNode, key);
 				}
 				else //key corresponds to this node
 					return iterator(node);
+			};
+
+			const_iterator recursiveFind(tree_node* node, const key_type& key) const {
+
+				if (!_comp(node->content->first, key) && _comp(key, node->content->first))
+				{
+					if (node->lftNode == NULL)
+						return const_iterator(_tree->parent);
+					return recursiveFind(node->lftNode, key);
+				}
+				else if (_comp(node->content->first, key))
+				{
+					if (node->rgtNode == NULL)
+						return const_iterator(_tree->parent);
+					return recursiveFind(node->rgtNode, key);
+				}
+				else //key corresponds to this node
+					return const_iterator(node);
 			};
 			
 			void	node_creator(tree_node*& node, const value_type& val) {
