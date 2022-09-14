@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 13:00:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/08 18:39:59 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/14 17:10:51 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,18 @@ namespace ft
 			typedef T                                           					mapped_type;
 			typedef ft::pair<const key_type, mapped_type>							value_type;
 			typedef Compare															key_compare;
-			typedef Alloc															allocator_type;
+			typedef	typename ft::node<value_type>									tree_node;
+			typedef typename Alloc::template rebind<tree_node>::other				allocator_type;
 			typedef typename allocator_type::reference								reference;
 			typedef typename allocator_type::const_reference						const_reference;
 			typedef typename allocator_type::pointer								pointer;
 			typedef typename allocator_type::const_pointer							const_pointer;
-			typedef	typename ft::node<key_type, mapped_type>						tree_node;
-			typedef typename ft::iterator<tree_node*, value_type>					iterator;
-			typedef typename ft::iterator<const tree_node*, const value_type>		const_iterator;
-			typedef typename ft::map_reverse_iterator<iterator, value_type>				reverse_iterator;
-			typedef typename ft::map_reverse_iterator<const_iterator, value_type>		const_reverse_iterator;
+			typedef typename ft::iterator<pointer, value_type>						iterator;
+			typedef typename ft::iterator<pointer, const value_type>				const_iterator;
+			typedef typename ft::map_reverse_iterator<iterator, value_type>			reverse_iterator;
+			typedef typename ft::map_reverse_iterator<const_iterator, value_type>	const_reverse_iterator;
 			typedef size_t															size_type;
+			
 			// typedef typename ft::iterator<iterator>::difference_type	difference_type;
 
 			class value_compare: public std::binary_function<value_type, value_type, bool> {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
@@ -74,12 +75,11 @@ namespace ft
 			explicit map (const key_compare& comp = key_compare(),
 							const allocator_type& alloc = allocator_type()): _tree(NULL), _alloc(alloc), _comp(comp), _size(0) {
 				
-				_tree = _treeAlloc.allocate(1);
+				_tree = _alloc.allocate(1);
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
 				_tree->height = 1;
-				_pastTheEndNode = _treeAlloc.allocate(1);
-				_pastTheEndNode->content = _alloc.allocate(1);
+				_pastTheEndNode = _alloc.allocate(1);
 				_pastTheEndNode->lftNode = _tree;
 				_tree->parent = _pastTheEndNode;
 				_pastTheEndNode->parent = NULL;
@@ -90,12 +90,11 @@ namespace ft
        				const key_compare& comp = key_compare(),
        				const allocator_type& alloc = allocator_type()): _tree(NULL), _alloc(alloc), _comp(comp), _size(0) {
 			
-				_tree = _treeAlloc.allocate(1);
+				_tree = _alloc.allocate(1);
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
 				_tree->height = 1;
-				_pastTheEndNode = _treeAlloc.allocate(1);
-				_pastTheEndNode->content = _alloc.allocate(1);
+				_pastTheEndNode = _alloc.allocate(1);
 				_pastTheEndNode->lftNode = _tree;
 				_tree->parent = _pastTheEndNode;
 				_pastTheEndNode->parent = NULL;
@@ -106,27 +105,22 @@ namespace ft
 			
 			map (const map& x): _tree(NULL), _alloc(x._alloc), _comp(x._comp), _size(0) {
 
-				_tree = _treeAlloc.allocate(1);
+				_tree = _alloc.allocate(1);
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
 				_tree->height = 1;
-				*this = x;
-				_pastTheEndNode = _treeAlloc.allocate(1);
-				_pastTheEndNode->content = _alloc.allocate(1);
+				_pastTheEndNode = _alloc.allocate(1);
 				_pastTheEndNode->lftNode = _tree;
 				_tree->parent = _pastTheEndNode;
 				_pastTheEndNode->parent = NULL;
+				*this = x;
 			};
 
 			~map(void) {
 				
 				this->tree_cleaner(_tree);
-				if (_size != 0)
-						node_destroyer(_tree);
-				else
-					this->_treeAlloc.deallocate(_tree, 1);
-				_alloc.deallocate(_pastTheEndNode->content, 1);
-				 _treeAlloc.deallocate(_pastTheEndNode, 1);
+				this->_alloc.deallocate(_tree, 1);
+				this->_alloc.deallocate(_pastTheEndNode, 1);
 			}
 			
 			/*OPERATOR= OVERLOAD*/
@@ -137,7 +131,7 @@ namespace ft
 				if (rhs._size != 0)
 				{
 					cpyInsert(rhs._tree);
-					this->insert(*(rhs._tree->content));
+					this->insert(rhs._tree->content);
 				}
 				return *this;
 			};
@@ -146,7 +140,7 @@ namespace ft
 			
 			 iterator	begin(void) {
 				
-				tree_node*	first = _tree;
+				pointer	first = _tree;
 
 				if (_size == 0)
 				{
@@ -163,7 +157,7 @@ namespace ft
 
 			const_iterator	begin(void) const {
 				
-				tree_node*	first = _tree;
+				pointer	first = _tree;
 
 				if (_size == 0)
 				{
@@ -178,7 +172,7 @@ namespace ft
 
 			iterator	end(void) {
 			
-				tree_node*	last = _tree;
+				pointer	last = _tree;
 				while (last->rgtNode != NULL)
 					last = last->rgtNode;
 				iterator	returner(last);
@@ -188,7 +182,7 @@ namespace ft
 
 			const_iterator	end(void) const {
 			
-				tree_node*	last = _tree;
+				pointer	last = _tree;
 				while (last->rgtNode != NULL)
 					last = last->rgtNode;
 				const_iterator	returner(last);
@@ -205,33 +199,59 @@ namespace ft
 
 			/*MODIFIERS FUNCTIONS*/
 
-			ft::pair<pointer, bool>	insert(const value_type& val) {
+			ft::pair<iterator, bool>	insert(const value_type& val) {
 
 				if (_size == 0)
 				{
-					_tree->content = this->_alloc.allocate(1);
-					this->_alloc.construct(_tree->content, val);
+					this->_alloc.construct(_tree, val);
+					_tree->parent = _pastTheEndNode;
+					_tree->lftNode = NULL;
+					_tree->rgtNode = NULL;
+					_tree->height = 1;
 					_size++;
-					return ft::make_pair(_tree->content, true);
+					if (_pastTheEndNode->parent == NULL && _tree->parent == _pastTheEndNode)
+					return ft::make_pair(iterator(_tree), true);
+				}
+				ft::pair<pointer, bool>	ptrPair = recursiveInsert(_tree, val);
+				_tree = _tree->rebalance();
+				_pastTheEndNode->lftNode = _tree;
+				_tree->parent = _pastTheEndNode;
+				ft::pair<iterator, bool> returner(iterator(ptrPair.first), ptrPair.second);
+				return (returner);
+			};
+
+			iterator	insert( iterator position, const value_type& value ) {
+
+				if (_size == 0 || position == this->end() || _comp(position->first, value.first))
+				{
+					ft::pair<iterator, bool> result = this->insert(value);
+					return result.first;
 				}
 				else
 				{
-					ft::pair<pointer, bool>	returner = recursiveInsert(_tree, val);
-					_tree = _tree->rebalance();
-					_pastTheEndNode->lftNode = _tree;
-					_tree->parent = _pastTheEndNode;
-					return (returner);
+					ft::pair<pointer, bool>	returner = recursiveInsert(position.base(), value);
+					pointer nodeLocator = position.base();
+					while (nodeLocator != this->_pastTheEndNode)
+					{
+						nodeLocator = nodeLocator->rebalance();
+						nodeLocator = nodeLocator->parent;
+					}
+					return returner.first;
 				}
+			};
+
+			template< class InputIterator >
+			void	insert( InputIterator first, InputIterator last ) {
+				
+				while (first != last)
+					insert(*(first++));
 			};
 
 			void	clear(void) {
 		
 				tree_cleaner(_tree);
 				if (_size != 0)
-				{
-					this->_alloc.destroy(_tree->content);
-					this->_alloc.deallocate(_tree->content, 1);
-				}
+					this->_alloc.destroy(_tree);
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
 				_tree->height = 1;
@@ -240,6 +260,11 @@ namespace ft
 				_tree->parent = _pastTheEndNode;
 			}
 
+			void erase (iterator position) {
+
+				this->erase(position->first);
+			};
+			
 			size_type	erase(const key_type& key) {
 
 				int	ret_val = 1;
@@ -254,9 +279,16 @@ namespace ft
 				return ret_val;
 			};
 
-			void		swap(map& other) { //issue with the null being still valid for iteration when(apparently) it shouldn't(maybe solved)
+			void erase (iterator first, iterator last) {
 
-				tree_node*		treeSwap = this->_tree;
+				while (first != last)
+					this->erase(first++->first);
+
+			};
+
+			void		swap(map& other) {
+
+				pointer		treeSwap = this->_tree;
 				allocator_type	allocSwap = this->_alloc;
 				size_type		sizeSwap = this->_size;
 				
@@ -276,46 +308,31 @@ namespace ft
 			/*CAPACITY FUNCTIONS*/
 
 			size_type	size(void) const { return _size; };
-			size_type	max_size(void) const { return _treeAlloc.max_size(); };
+			size_type	max_size(void) const { return _alloc.max_size(); };
 			bool		empty(void) const { return _size == 0; };
 
 			/*ELEMENT ACCESS FUNCTIONS*/
 
              mapped_type&			at(const key_type& key) { 
                 
-                iterator	itBeg = begin();
-                iterator	itEnd = end();
-				while (itBeg != itEnd)
-				{
-					if (itBeg->first == key)
-						return itBeg->second;
-					itBeg++;
-				}
+				iterator	returner = this->find(key);
+				if (returner != this->end())
+					return returner->second;
 				throw std::out_of_range("map::at"); 
             };
-            const mapped_type&		at(const key_type& key) const {
+            const mapped_type&	at(const key_type& key) const {
 
-                iterator	itBeg = begin();
-                iterator	itEnd = end();
-				while (itBeg != itEnd)
-				{
-					if (itBeg->first == key)
-						return itBeg->second;
-					itBeg++;
-				}
+				const_iterator	returner = this->find(key);
+				if (returner != this->end())
+					return returner->second;
 				throw std::out_of_range("map::at"); 
 			};
 
-			mapped_type& operator[] (const key_type& key) {
+			mapped_type&		operator[](const key_type& key) {
 
-				iterator	itBeg = begin();
-                iterator	itEnd = end();
-				while (itBeg != itEnd)
-				{
-					if (itBeg->first == key)
-						return itBeg->second;
-					itBeg++;
-				}
+				iterator	returner = this->find(key);
+				if (returner != this->end())
+					return returner->second;
 				this->insert(ft::make_pair(key, mapped_type()));
 
 				return this->at(key);
@@ -450,23 +467,23 @@ namespace ft
 
 			/*OBSERVERS*/
 
-			key_compare key_comp(void) const { return this->_comp; };
+			key_compare		key_comp(void) const { return this->_comp; };
 	
-			value_compare value_comp(void) const { return (value_compare(key_comp())); };
+			value_compare	value_comp(void) const { return (value_compare(key_comp())); };
 	
 			/*ALLOCATOR*/
 
-            allocator_type      get_allocator(void) const { return this->_alloc; };
+            Alloc			get_allocator(void) const { Alloc	allocObj; return allocObj; };
 			
 			/*HELPER FUNCTIONS*/
 
-			void	printMap(ft::node<key_type, mapped_type>* node, int level = int()) {
+			void	printMap(ft::node<value_type>* node, int level = int()) {
 
 				if (node == NULL)
 					node = _tree;
 				if (_tree == NULL)
 					return ;
-				std::cout << "At level " << level << ", key is: " << node->content->first << ", value is: " << node->content->second << " and balance factor is: " << node->height_balance() << "; left node is ";
+				std::cout << "At level " << level << ", key is: " << node->content.first << ", value is: " << node->content.second << " and balance factor is: " << node->height_balance() << "; left node is ";
 				if (node->lftNode == NULL)
 					std::cout << "NULL";
 				else
@@ -479,7 +496,7 @@ namespace ft
 				else
 					std::cout << "real." << std::endl;
 				if (node != _tree && node->parent != NULL)
-					std::cout << "PARENT KEY: " << node->parent->content->first << std::endl;
+					std::cout << "PARENT KEY: " << node->parent->content.first << std::endl;
 				std::cout << "Height of this node is: " << node->height << std::endl << std::endl;
 				if (node->lftNode != NULL)
 				{
@@ -492,68 +509,50 @@ namespace ft
 					printMap(node->rgtNode, level + 1);
 				}
 			};
-
-			void	check_heights(ft::node<key_type, mapped_type>* node) {
-
-				if (node == NULL)
-					node = _tree;
-				if (_tree == NULL)
-					return ;
-				if (node->height_balance() < -1 || node->height_balance() > 1)
-					std::cout << "ERROR: balance of node of key " << node->content->first << "is " << node->height_balance() << std::endl;
-				if (node->lftNode != NULL)
-					check_heights(node->lftNode);
-				if (node->rgtNode != NULL)
-					check_heights(node->rgtNode);
-			};
 			
 		private:
 		
-			void	cpyInsert(tree_node* node) {
+			void	cpyInsert(pointer node) {
 
 				if (node->lftNode != NULL)
 				{
-					this->insert(*(node->lftNode->content));
+					this->insert(node->lftNode->content);
 					cpyInsert(node->lftNode);
 				}
-				if (node->rgtNode != NULL && node->rgtNode->content != NULL)
+				if (node->rgtNode != NULL)
 				{
-					this->insert(*(node->rgtNode->content));
+					this->insert(node->rgtNode->content);
 					cpyInsert(node->rgtNode);
 				}
 			};
 
-			void	node_destroyer(tree_node* node) {
+			void	node_destroyer(pointer node) {
 
-				this->_alloc.destroy(node->content);
-				this->_alloc.deallocate(node->content, 1);
-				this->_treeAlloc.deallocate(node, 1);
+				this->_alloc.destroy(node);
+				this->_alloc.deallocate(node, 1);
 			}
 			
-			void	tree_cleaner(tree_node* node) {
+			void	tree_cleaner(pointer node) {
 
 				if (node->lftNode != NULL)
 				{
 					if (node->lftNode->lftNode != NULL || node->lftNode->rgtNode != NULL)
 						tree_cleaner(node->lftNode);
-					//std::cout << "Destroying node of " << node->lftNode->content->first << std::endl;
+					// std::cout << "Destroying node of " << node->lftNode->content.first << std::endl;
 					node_destroyer(node->lftNode);
 				}
 				if (node->rgtNode != NULL)
 				{
 					if (node->rgtNode->lftNode != NULL || node->rgtNode->rgtNode != NULL)
 						tree_cleaner(node->rgtNode);
-					//std::cout << "Destroying node of " << node->rgtNode->content->first << std::endl;
-					if (node->rgtNode->content != NULL)
+					// std::cout << "Destroying node of " << node->rgtNode->content.first << std::endl;
 						node_destroyer(node->rgtNode);
-					else
-						this->_treeAlloc.deallocate(node->rgtNode, 1);
 				}
 			}
 			
-			ft::pair<pointer, bool>	recursiveInsert(tree_node* node, const value_type& val) {
+			ft::pair<pointer, bool>	recursiveInsert(pointer node, const value_type& val) {
 
-				if (!_comp(node->content->first, val.first) && _comp(val.first, node->content->first))
+				if (!_comp(node->content.first, val.first) && _comp(val.first, node->content.first))
 				{
 					if (node->lftNode == NULL)
 					{
@@ -561,7 +560,7 @@ namespace ft
 						_size++;
 						node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
 						node->lftNode->parent = node;
-						return (ft::make_pair(node->lftNode->content, true));
+						return (ft::make_pair(node->lftNode, true));
 					}
 					else
 					{
@@ -571,18 +570,18 @@ namespace ft
 						return (returner);
 					}
 				}
-				else if (_comp(node->content->first, val.first))
+				else if (_comp(node->content.first, val.first))
 				{
 					if (node->rgtNode == NULL)
 					{
-						tree_node*	tmp;
+						pointer	tmp;
 
 						node_creator(tmp, val);
 						node->rgtNode = tmp;
 						_size++;
 						node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
 						node->rgtNode->parent = node;
-						return (ft::make_pair(node->rgtNode->content, true));
+						return (ft::make_pair(node->rgtNode, true));
 					}
 					else
 					{
@@ -593,18 +592,13 @@ namespace ft
 					}
 				}
 				else
-				{
-					this->_alloc.destroy(node->content);
-					this->_alloc.construct(node->content, val);
-					return (ft::make_pair(node->content, true));
-				}
-				return(ft::make_pair(node->content, false));
+					return(ft::make_pair(node, false));
 			};
 
 
-			tree_node*	recursiveErase(tree_node* node, key_type key, int& ret_val) {
+			pointer	recursiveErase(pointer node, key_type key, int& ret_val) {
 				
-				if (!_comp(node->content->first, key) && _comp(key, node->content->first))
+				if (!_comp(node->content.first, key) && _comp(key, node->content.first))
 				{
 					if (node->lftNode == NULL)
 					{
@@ -616,7 +610,7 @@ namespace ft
 						node->lftNode = node->lftNode->rebalance();
 					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1;
 				}
-				else if (_comp(node->content->first, key))
+				else if (_comp(node->content.first, key))
 				{
 					if (node->rgtNode == NULL)
 					{
@@ -640,8 +634,7 @@ namespace ft
 						}
 						else
 						{
-							this->_alloc.destroy(_tree->content);
-							this->_alloc.deallocate(_tree->content, 1);
+							this->_alloc.destroy(_tree);
 							_size--;
 							return _tree;
 						}
@@ -664,11 +657,11 @@ namespace ft
 				return node;
 			}
 
-			tree_node*	node_locator_predecessor(tree_node* node, tree_node* node_to_del) {
+			pointer	node_locator_predecessor(pointer node, pointer node_to_del) {
 
 				if (node->rgtNode != NULL && node->rgtNode->rgtNode != NULL)
 				{
-					tree_node* returner = node_locator_predecessor(node->rgtNode, node_to_del);
+					pointer returner = node_locator_predecessor(node->rgtNode, node_to_del);
 					node = node->rebalance();
 					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1; //Too many checks???
 					return returner;
@@ -686,7 +679,7 @@ namespace ft
 				}
 				else
 				{
-					tree_node*	tmp = node->rgtNode;
+					pointer	tmp = node->rgtNode;
 					node->rgtNode = node->rgtNode->lftNode;
 					if (node->rgtNode != NULL)
 						node->rgtNode->parent = node;
@@ -704,11 +697,11 @@ namespace ft
 				}
 			}
 
-			tree_node*	node_locator_successor(tree_node* node, tree_node* node_to_del) {
+			pointer	node_locator_successor(pointer node, pointer node_to_del) {
 
 				if (node->lftNode != NULL && node->lftNode->lftNode != NULL)
 				{
-					tree_node* returner = node_locator_successor(node->lftNode, node_to_del);
+					pointer returner = node_locator_successor(node->lftNode, node_to_del);
 					node = node->rebalance();
 					node->height = std::max(node->getHeight(node->lftNode), node->getHeight(node->rgtNode)) + 1; //Too many checks???
 					return returner;
@@ -726,7 +719,7 @@ namespace ft
 				}
 				else
 				{
-					tree_node*	tmp = node->lftNode;
+					pointer	tmp = node->lftNode;
 					node->lftNode = node->lftNode->rgtNode;
 					if (node->lftNode != NULL)
 						node->lftNode->parent = node;
@@ -744,15 +737,15 @@ namespace ft
 				}
 			}
 
-			iterator recursiveFind(tree_node* node, const key_type& key) {
+			iterator recursiveFind(pointer node, const key_type& key) {
 
-				if (!_comp(node->content->first, key) && _comp(key, node->content->first))
+				if (!_comp(node->content.first, key) && _comp(key, node->content.first))
 				{
 					if (node->lftNode == NULL)
 						return iterator(_tree->parent);
 					return recursiveFind(node->lftNode, key);
 				}
-				else if (_comp(node->content->first, key))
+				else if (_comp(node->content.first, key))
 				{
 					if (node->rgtNode == NULL)
 						return iterator(_tree->parent);
@@ -762,15 +755,15 @@ namespace ft
 					return iterator(node);
 			};
 
-			const_iterator recursiveFind(tree_node* node, const key_type& key) const {
+			const_iterator recursiveFind(pointer node, const key_type& key) const {
 
-				if (!_comp(node->content->first, key) && _comp(key, node->content->first))
+				if (!_comp(node->content.first, key) && _comp(key, node->content.first))
 				{
 					if (node->lftNode == NULL)
 						return const_iterator(_tree->parent);
 					return recursiveFind(node->lftNode, key);
 				}
-				else if (_comp(node->content->first, key))
+				else if (_comp(node->content.first, key))
 				{
 					if (node->rgtNode == NULL)
 						return const_iterator(_tree->parent);
@@ -780,11 +773,10 @@ namespace ft
 					return const_iterator(node);
 			};
 			
-			void	node_creator(tree_node*& node, const value_type& val) {
+			void	node_creator(pointer& node, const value_type& val) {
 
-				node = _treeAlloc.allocate(1);
-				node->content = this->_alloc.allocate(1);
-				this->_alloc.construct(node->content, val);
+				node = _alloc.allocate(1);
+				this->_alloc.construct(node, val);
 				node->lftNode = NULL;
 				node->rgtNode = NULL;
 				node->parent = NULL;
@@ -793,10 +785,9 @@ namespace ft
 			
 			/*Private Variables*/
 
-			tree_node*					_tree;
-			tree_node*					_pastTheEndNode;
+			pointer					_tree;
+			pointer					_pastTheEndNode;
 			allocator_type				_alloc;
-			std::allocator<tree_node>	_treeAlloc;
 			key_compare					_comp;
 			size_type					_size;
 

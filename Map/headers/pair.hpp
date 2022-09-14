@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 15:21:39 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/02 12:40:32 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/13 14:04:14 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ namespace ft {
 
 		/*Constructors*/
 
-		pair(): first(first_type()), second(second_type()) {};
+		pair(void): first(first_type()), second(second_type()) {};
 		
 		template<class U, class V>
 		pair(const pair<U,V>& pr): first(pr.first), second(pr.second) {};

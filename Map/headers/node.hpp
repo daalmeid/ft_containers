@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/22 12:08:48 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/25 17:16:38 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/14 12:44:16 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,29 @@
 
 namespace ft
 {
-	template <class Key, class Value>
+	template <class Pair>
 	struct	node {
 		
 		int						height;
 		node*					lftNode;
 		node*					rgtNode;
 		node*					parent;
-		pair<const Key, Value>*	content;
+		Pair					content;
 
+		node(void): height(0), lftNode(NULL), rgtNode(NULL), parent(NULL), content(Pair()) {};
+		node(Pair const& x): height(0), lftNode(NULL), rgtNode(NULL), parent(NULL), content(x) {};
+		node(node const& cpy): height(cpy.height), lftNode(NULL), rgtNode(NULL), parent(cpy.parent), content(cpy.content) {};
+		~node(void) {};
+		node&	operator=(node const& rhs) {
+
+			this->height = rhs.height;
+			this->lftNode = rhs.lftNode;
+			this->rgtNode = rhs.rgtNode;
+			this->parent = rhs.parent;
+			this->content = rhs.content;
+			return *this;
+		};
+		
 		node*	rebalance(void) {
 
 			if (height_balance() < -1 && (lftNode->height_balance() == -1 || lftNode->height_balance() == 0))

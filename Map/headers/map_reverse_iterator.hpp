@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   reverse_iterator.hpp                               :+:      :+:    :+:   */
+/*   map_reverse_iterator.hpp                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 15:40:13 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/19 11:52:46 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/13 15:09:08 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,14 @@ namespace ft
 				iterator_type	cpy(this->_base);
 				cpy--;
 				pointer	final = cpy.base();
-				return *(final->content); 
+				return final->content; 
 			};
 			Value*		operator->(void) { 
 
 				iterator_type	cpy(this->_base);
 				cpy--;
 				pointer	final = cpy.base();
-				return final->content; 
+				return &(final->content); 
 			};
 
 			iterator_type 		base(void) const { return this->_base; };

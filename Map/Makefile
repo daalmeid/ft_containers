@@ -40,7 +40,8 @@ SRCFILE	=		main.cpp\
 				ModifiersTests.cpp\
 				LookupTests.cpp\
 				ObserversTests.cpp\
-				OperatorsTests.cpp
+				OperatorsTests.cpp\
+				AllocatorTest.cpp
 
 SRCCMP	=		$(addprefix srcs/, $(SRCFILE))
 

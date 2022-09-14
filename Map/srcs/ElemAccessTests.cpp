@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/05 16:10:48 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/05 16:53:18 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/14 17:19:11 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,20 @@ void	elem_access_tests(void) {
 
 		std::cout << "Caught exception: value out of bounds!" << std::endl;
 	}
+	std::cout << "at() has an overload that returns a const mapped value, in case the map is const. constTester.at(12) should print \"twelve\":" << std::endl;
+	
+	const ft::map<int, std::string> constTester(tester.begin(), tester.end());
 
+	std::cout << constTester.at(12) << std::endl << std::endl;
+	
 	std::cout << "What if we use the [] operator? Giving it an existing key will return the mapped value (using key 153 mapped to \"a lot\"):" << std::endl;
 	std::cout << "Value: " << tester[153] << std::endl << std::endl;
-	std::cout << "How about a non-xiting key? Let's try 1999:" << std::endl;
+	std::cout << "How about a non-existing key? Let's try 1999:" << std::endl;
 	std::cout << "Value: " << tester[1999] << std::endl << std::endl;
 	std::cout << "In this case, the key is added to the map with a default value for its mapped value (Empty string here). If we print the full map:" << std::endl;
 
 	ft::map<int, std::string>::iterator	itBeg = tester.begin();
 	ft::map<int, std::string>::iterator	itEnd = tester.end();
 	while (itBeg != itEnd )
-		std::cout << "Key: " << itBeg->first << "; Value: " << itBeg++->second << std::endl;	
-
+		std::cout << "Key: " << itBeg->first << "; Value: " << itBeg++->second << std::endl;
 }

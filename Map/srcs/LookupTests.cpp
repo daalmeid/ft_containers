@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 12:02:19 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/08 17:29:38 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/09 12:11:22 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void    lookup_tests(void) {
 
     std::cout << ".**********************************." << std::endl;
-	std::cout << "|         Lookup Tests          |" << std::endl;
+	std::cout << "|           Lookup Tests           |" << std::endl;
 	std::cout << " ********************************** " << std::endl << std::endl;
     
     std::cout << "Let's create a map with the following keys: 0, 2, 4, 5, 6, 10, 11, 12, 13, 14, 15, 17, 25, 30, 40, 42, 71, 153." << std::endl;
@@ -47,7 +47,7 @@ void    lookup_tests(void) {
 
 	std::cout << "key: " << itFind->first << "; Value: " << itFind->second << std::endl;
 
-    std::cout << "What if the value does not exit in the map, like 1246? A past-the-end iterator should be returned:" << std::endl;
+    std::cout << "What if the value does not exist in the map, like 1246? A past-the-end iterator should be returned:" << std::endl;
     itFind = tester.find(1246);
     std::cout << "How to check? Let's use the return to iterate until we reach the begin, without dereferencing it in its initial position(undefined behaviour):" << std::endl;
     while (itFind != tester.begin())

@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 12:22:48 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/08 18:39:09 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/13 15:11:20 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void    constructor_tests(void) {
 
 	ft::map<int, std::string>::iterator	itBeg = emptyMap.begin();
 	ft::map<int, std::string>::iterator	itEnd = emptyMap.end();
+	
 	ft::map<int, std::string>	iterMap(itBeg, itEnd);
 	
 	ft::map<int, std::string>	tester(emptyMap);
@@ -32,8 +33,8 @@ void    constructor_tests(void) {
 	std::cout << "Iterator map size: " << iterMap.size() << std::endl;
 	std::cout << "Copy map size: " << tester.size() << std::endl;
 
-
 	tester.insert(ft::make_pair(10, "Ten"));
+	std::cout << "Here" << std::endl;
 	tester.insert(ft::make_pair(2, "Two"));
 	tester.insert(ft::make_pair(13, "thirteen"));
 	tester.insert(ft::make_pair(4, "Four"));

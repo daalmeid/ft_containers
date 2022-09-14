@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 12:26:14 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/08 18:45:36 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/14 16:07:04 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,72 @@ void	iterator_tests(void) {
 	revItEnd++;
 
 	if (revItBeg != revItEnd)
-		std::cout << "!= works properly" << std::endl;
+		std::cout << "!= works properly" << std::endl << std::endl;
 	else
-		std::cout << "!= has an error" << std::endl;
+		std::cout << "!= has an error" << std::endl << std::endl;
+
+	std::cout << ".**********************************." << std::endl;
+	std::cout << "|       Const Iterator Tests       |" << std::endl;
+	std::cout << " ********************************** " << std::endl << std::endl;
+
+	std::cout << "Let's do some const iterator operations, first declaring two of them to iterate through our map: " << std::endl;
+
+	ft::map<int, std::string>::const_iterator cItBeg = tester.begin();
+	ft::map<int, std::string>::const_iterator cItEnd = tester.end();
+
+	while (cItBeg != cItEnd)
+		std::cout << cItBeg++->second << std::endl;
+	
+	std::cout << std::endl << "What if we try to change one of the elements trough these iterators? (Remove comment to test)" << std::endl;
+
+	cItBeg = tester.begin();
+
+	// cItBeg->second = "CAN YOU CHANGE ME?";
+
+	std::cout << std::endl << "How about creating an iterator based on a const_iterator? (remove comment to test)" << std::endl;
+	// ft::map<double, std::string>::iterator wrongIt(cItBeg);
+
+	itBeg = tester.begin();
+	itEnd = tester.end();
+
+	const ft::map<int, std::string> constMap(itBeg, itEnd);
+
+	std::cout << std::endl << "Is it possible to create a normal iterator to a const map? (remove comment to test)" << std::endl;
+	//ft::map<int, std::string>::iterator cIt = constMap.begin();
+	std::cout << std::endl << "How about creating a const_iterator to a const map? Let's try and use it to iterate through the map:" << std::endl;
+
+	ft::map<int, std::string>::const_iterator realCIt = constMap.begin();
+	for (ft::map<int, std::string>::const_iterator end = constMap.end(); realCIt != end; realCIt++)
+		std::cout << realCIt->second << std::endl;
+	
+	std::cout <<std::endl;
+	std::cout << ".**********************************." << std::endl;
+	std::cout << "|     Const Rev Iterator Tests     |" << std::endl;
+	std::cout << " ********************************** " << std::endl << std::endl;
+
+	std::cout << "Let's do some const reverse iterator operations, first declaring two of them to iterate through our map: " << std::endl;
+
+	ft::map<int, std::string>::const_reverse_iterator cRevItBeg = tester.rbegin();
+	ft::map<int, std::string>::const_reverse_iterator cRevItEnd = tester.rend();
+
+	while (cRevItBeg != cRevItEnd)
+		std::cout << cRevItBeg++->second << std::endl;
+	
+	std::cout << std::endl << "What if we try to change one of the elements trough these iterators? (Remove comment to test)" << std::endl;
+
+	cRevItBeg = tester.rbegin();
+
+	// cItBeg->second = "CAN YOU CHANGE ME?";
+
+	std::cout << std::endl << "How about creating an iterator based on a const_iterator? (remove comment to test)" << std::endl;
+	// ft::map<double, std::string>::reverse_iterator wrongIt(cRevItBeg);
+
+	std::cout << std::endl << "Is it possible to create a normal reverse iterator to a const map? (remove comment to test)" << std::endl;
+	// ft::map<int, std::string>::reverse_iterator cIt = constMap.rbegin();
+	std::cout << std::endl << "How about creating a const__reverse_iterator to a const map? Let's try and use it to iterate through the map:" << std::endl;
+
+	ft::map<int, std::string>::const_reverse_iterator realRevCIt = constMap.rbegin();
+	for (ft::map<int, std::string>::const_reverse_iterator end = constMap.rend(); realRevCIt != end; realRevCIt++)
+		std::cout << realRevCIt->second << std::endl;
+	
 }
