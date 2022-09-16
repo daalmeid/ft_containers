@@ -28,11 +28,11 @@ RM		=		rm -f
 
 CMP		=		c++
 FLAGS	=		-g -Wall -Werror -Wextra -std=c++98
-INCLUDE	=		-I ./headers/
+INCLUDE	=		-I ./headers/ -I ./headers/utils
 
 ################## FILES ###################
 
-SRCFILE	=		main.cpp\
+MPFILES	=		main.cpp\
 				PairTests.cpp\
 				ConstructorTests.cpp\
 				IteratorTests.cpp\
@@ -43,24 +43,38 @@ SRCFILE	=		main.cpp\
 				OperatorsTests.cpp\
 				AllocatorTest.cpp
 
-SRCCMP	=		$(addprefix srcs/, $(SRCFILE))
+SRCADD	=		$(addprefix mapTests/, $(MPFILES))
 
-OBJS	=		$(patsubst srcs/%.cpp, srcs/%.o, $(SRCCMP))
+MPOBJS	=		$(patsubst mapTests/%.cpp, mapTests/%.o, $(SRCADD))
+
+VCFILES	=		ConstructorTests.cpp\
+				CapacityTests.cpp\
+				ElAccessTests.cpp\
+				ModifiersTests.cpp\
+				OperatorsTests.cpp\
+				IteratorTests.cpp
+
+VCADD	=		$(addprefix VecTests/, $(VCFILES))
+
+VCOBJS	=		$(patsubst VecTests/%.cpp, VecTests/%.o, $(VCADD))
 
 ################## RULES ###################
 
 all: $(NAME)
 
-srcs/%.o : srcs/%.cpp
+VecTests/%.o : VecTests/%.cpp
 	$(CMP) $(FLAGS) $(INCLUDE) -c $< -o $@
 
-$(NAME): $(OBJS)
-	$(CMP) $(FLAGS) $(INCLUDE) $(OBJS) -o $(NAME)
+mapTests/%.o : mapTests/%.cpp
+	$(CMP) $(FLAGS) $(INCLUDE) -c $< -o $@
+
+$(NAME): $(MPOBJS) $(VCOBJS)
+	$(CMP) $(FLAGS) $(INCLUDE) $(MPOBJS) $(VCOBJS) -o $(NAME)
 
 ################## CLEAN ###################
 
 clean:
-	$(RM) $(OBJS)
+	$(RM) $(MPOBJS) $(VCOBJS)
 
 fclean: clean
 	$(RM) $(NAME)
