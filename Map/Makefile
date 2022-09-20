@@ -10,9 +10,11 @@
 #                                                                              #
 # **************************************************************************** #
 
-################## Program #################
+################## Programs #################
 
-NAME 	= 		MapTesting
+FTNAME	= 		Containers_FT
+
+STLNAME	= 		Containers_STL
 
 ################## COLORS ##################
 
@@ -41,11 +43,12 @@ MPFILES	=		main.cpp\
 				LookupTests.cpp\
 				ObserversTests.cpp\
 				OperatorsTests.cpp\
-				AllocatorTest.cpp
+				AllocatorTest.cpp\
+				PerformanceTests.cpp
 
-SRCADD	=		$(addprefix mapTests/, $(MPFILES))
+MPADD	=		$(addprefix MapTests/, $(MPFILES))
 
-MPOBJS	=		$(patsubst mapTests/%.cpp, mapTests/%.o, $(SRCADD))
+MPOBJS	=		$(patsubst MapTests/%.cpp, MapTests/%.o, $(MPADD))
 
 VCFILES	=		ConstructorTests.cpp\
 				CapacityTests.cpp\
@@ -58,26 +61,38 @@ VCADD	=		$(addprefix VecTests/, $(VCFILES))
 
 VCOBJS	=		$(patsubst VecTests/%.cpp, VecTests/%.o, $(VCADD))
 
+STFILES	=		StackTests.cpp
+
+STADD	=		$(addprefix StackTests/, $(STFILES))
+
+STOBJS	=		$(patsubst StackTests/%.cpp, StackTests/%.o, $(STADD))
+
 ################## RULES ###################
 
-all: $(NAME)
+all: $(FTNAME) $(STLNAME)
 
 VecTests/%.o : VecTests/%.cpp
 	$(CMP) $(FLAGS) $(INCLUDE) -c $< -o $@
 
-mapTests/%.o : mapTests/%.cpp
+MapTests/%.o : MapTests/%.cpp
 	$(CMP) $(FLAGS) $(INCLUDE) -c $< -o $@
 
-$(NAME): $(MPOBJS) $(VCOBJS)
-	$(CMP) $(FLAGS) $(INCLUDE) $(MPOBJS) $(VCOBJS) -o $(NAME)
+StackTests/%.o : StackTests/%.cpp
+	$(CMP) $(FLAGS) $(INCLUDE) -c $< -o $@
+
+$(FTNAME): $(MPOBJS) $(VCOBJS) $(STOBJS)
+	$(CMP) $(FLAGS) $(INCLUDE) $(MPOBJS) $(VCOBJS) $(STOBJS) -o $(FTNAME)
+
+$(STLNAME): $(MPOBJS) $(VCOBJS) $(STOBJS)
+	$(CMP) $(FLAGS) $(INCLUDE) $(MPOBJS) $(VCOBJS) $(STOBJS) -o $(STLNAME)
 
 ################## CLEAN ###################
 
 clean:
-	$(RM) $(MPOBJS) $(VCOBJS)
+	$(RM) $(MPOBJS) $(VCOBJS) $(STOBJS)
 
 fclean: clean
-	$(RM) $(NAME)
+	$(RM) $(FTNAME) $(STLNAME)
 
 re: fclean all
 

@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 13:00:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/16 17:07:17 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/20 16:47:34 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ namespace ft
            >
 	class map {
 
+		
 		public:
 
 			/*member types*/
@@ -38,10 +39,7 @@ namespace ft
 			typedef T                                           					mapped_type;
 			typedef ft::pair<const key_type, mapped_type>							value_type;
 			typedef Compare															key_compare;
-			typedef	typename ft::node<value_type>									tree_node;
 			typedef Alloc															allocator_type;
-			typedef typename Alloc::template rebind<tree_node>::other				tree_allocator_type;
-			typedef typename tree_allocator_type::pointer							tree_pointer;
 			typedef typename allocator_type::reference								reference;
 			typedef typename allocator_type::const_reference						const_reference;
 			typedef typename allocator_type::pointer								pointer;
@@ -50,9 +48,16 @@ namespace ft
 			typedef typename ft::BD_const_iterator<const_pointer, key_compare>		const_iterator;
 			typedef typename ft::reverse_iterator<iterator>							reverse_iterator;
 			typedef typename ft::reverse_iterator<const_iterator>					const_reverse_iterator;
+			typedef typename ft::BD_iterator<pointer, key_compare>::difference_type	difference_type;
 			typedef size_t															size_type;
 			
-			// typedef typename ft::iterator<iterator>::difference_type	difference_type;
+		private:
+			/*Types used only internally*/
+			typedef	typename ft::node<value_type>									tree_node;
+			typedef typename Alloc::template rebind<tree_node>::other				tree_allocator_type;
+			typedef typename tree_allocator_type::pointer							tree_pointer;
+		
+		public:
 
 			class value_compare: public std::binary_function<value_type, value_type, bool> {   // in C++98, it is required to inherit binary_function<value_type,value_type,bool>
 				
@@ -77,6 +82,7 @@ namespace ft
 			explicit map (const key_compare& comp = key_compare(),
 							const allocator_type& alloc = allocator_type()): _tree(NULL), _alloc(alloc), _comp(comp), _size(0) {
 				
+				 std::cout << "My map called!" << std::endl; 
 				_tree = _TreeAlloc.allocate(1);
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
@@ -228,8 +234,8 @@ namespace ft
 				}
 				else
 				{
-					ft::pair<tree_pointer, bool>	returner = recursiveInsert(position._M_node, value);
-					tree_pointer nodeLocator = position._M_node;
+					ft::pair<tree_pointer, bool>	returner = recursiveInsert(static_cast<tree_pointer>(position._M_node), value);
+					tree_pointer nodeLocator = static_cast<tree_pointer>(position._M_node);
 					while (nodeLocator != this->_pastTheEndNode)
 					{
 						nodeLocator = rebalance(nodeLocator);

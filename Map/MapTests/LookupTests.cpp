@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/08 12:02:19 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/16 16:58:54 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/20 12:24:57 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,11 @@ void    map_lookup_tests(void) {
 	itLB = tester.lower_bound(41);
 	std::cout << "Key: " << itLB->first << "; Value: " << itLB->second << std::endl << std::endl;
 
+	std::cout << "lower_bound(153), being 153 the last element in the map:" << std::endl;
+
+	itLB = tester.lower_bound(153);
+	std::cout << "Key: " << itLB->first << "; Value: " << itLB->second << std::endl << std::endl;
+
 	std::cout << "upper_bound() - Return a iterator pointing to the first element that greater than the key given as an argument." << std::endl;
 	std::cout << "upper_bound(42), being 42 a number inside the map:" << std::endl;
 	ft::map<int, std::string>::iterator	itUB = tester.upper_bound(42);
@@ -74,6 +79,12 @@ void    map_lookup_tests(void) {
     std::cout << "upper_bound(41), being 41 non-existent in the map:" << std::endl;
 	itUB = tester.upper_bound(41);
 	std::cout << "Key: " << itUB->first << "; Value: " << itUB->second << std::endl << std::endl;
+
+	std::cout << "upper_bound(153), being 153 the last element in the map:" << std::endl;
+
+	itLB = tester.upper_bound(153);
+	std::cout << "Is iterator equal to end?: " << (itLB == tester.end()? "yes" : "no") << std::endl;
+
 
 	std::cout << "equal_range() - Returns a pair of iterators, being the first one equal to lower_bound() and the second one equal to upper_bound()." << std::endl;
 	std::cout << "equal_range(42), being 42 a number inside the map:" << std::endl;

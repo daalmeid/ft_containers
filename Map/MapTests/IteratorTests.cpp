@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/01 12:26:14 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/16 16:58:54 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/19 15:35:10 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,17 @@ void	map_iterator_tests(void) {
 	std::cout << "Mapped value obtained through iterator created with _M_const_cast after the change: "<< testCast->second << std::endl;
 	std::cout << "Mapped value obtained through const iterator after the change: "<< realCIt->second << std::endl;
 
-	
+	realCIt = constMap.begin();
+	cItEnd =constMap.end();
+	if (realCIt != cItEnd)
+		std::cout << "!= works properly" << std::endl;
+	else
+		std::cout << "!= has an error" << std::endl;
+
+	if (realCIt == cItEnd)
+		std::cout << "== has an error" << std::endl;
+	else
+		std::cout << "== works properly" << std::endl;
 	
 	std::cout <<std::endl;
 	std::cout << ".**********************************." << std::endl;

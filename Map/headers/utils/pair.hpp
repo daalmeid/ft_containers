@@ -6,14 +6,12 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 15:21:39 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/15 18:54:06 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/20 15:25:47 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PAIR_HPP
 # define PAIR_HPP
-
-# include <algorithm>
 
 namespace ft {
 

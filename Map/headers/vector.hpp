@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 12:47:38 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/16 17:37:35 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/20 16:48:09 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ namespace ft
             explicit vector(const allocator_type& alloc = allocator_type()):
 			_alloc(alloc), _size(0), _capacity(0) {
 
-                this->_start = NULL;
+				std::cout << "My vector called!" << std::endl; 
+				this->_start = NULL;
             };
             
             explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()):
@@ -105,7 +106,7 @@ namespace ft
                 const_iterator    itBegin = rhs.begin();
                 const_iterator    itEnd = rhs.end();
                 
-                if (this->_size < rhs._size)
+				if (this->_size < rhs._size)
 					this->reserve(rhs._size);
 
                 pointer     copy_creator = this->_start;
@@ -139,9 +140,9 @@ namespace ft
             size_type           max_size(void) const { return this->_alloc.max_size(); };
             void                resize(size_type n, value_type val = value_type()) { 
 
-                if (n < this->_size) {
+				if (n < this->_size) {
 
-                    for (size_type index = this->_size - 1; index >= n; index--)
+                    for (size_type index = this->_size - 1; index >= n && index < this->_size; index--)
                         this->_alloc.destroy(&(this->_start[index]));
                 }
                 else {

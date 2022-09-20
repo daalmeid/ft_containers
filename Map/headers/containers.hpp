@@ -13,9 +13,10 @@
 #ifndef CONTAINERS_HPP
 # define CONTAINERS_HPP
 
-# if 0
+# if 1
 	#include <map>
 	#include <utility>
+	#include <stack>
 	#include <vector>
 	
 	namespace ft = std;
@@ -23,6 +24,7 @@
 	#include "map.hpp"
 	#include "vector.hpp"
 	#include "is_integral.hpp"
+	#include "stack.hpp"
 # endif
 # include <iostream>
 # include <string>
@@ -37,6 +39,7 @@ void    map_lookup_tests(void);
 void    map_observers_tests(void);
 void	map_operators_tests(void);
 void	map_allocator_test(void);
+void	map_performance_tests(void);
 
 void	constructors_tests( ft::vector< std::string >& vEmpty,
 							ft::vector< std::string >& vIters, ft::vector< std::string >& vCpy,
@@ -56,5 +59,7 @@ void	operators_tests(ft::vector< std::string >& vNorm,
 						ft::vector<std::string>::iterator& itEnd);
 void	vector_printer(ft::vector< std::string > & vec);
 void	iterator_tests(void);
+
+void	stack_tests(void);
 
 #endif

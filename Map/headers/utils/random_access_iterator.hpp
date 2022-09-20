@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 14:23:20 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/16 17:00:40 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/19 16:34:54 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,28 +36,22 @@ namespace ft
 			RA_iterator(RA_iterator<Iter> const& cpy): _ptr(cpy.base()) {};
 
 			/*operators*/
-			bool            operator==(RA_iterator const& rhs) { return this->_ptr == rhs._ptr; };
-			bool            operator!=(RA_iterator const& rhs) { return this->_ptr != rhs._ptr; };
-			bool            operator<(RA_iterator const& rhs) { return this->_ptr < rhs._ptr; };
-			bool            operator>(RA_iterator const& rhs) { return this->_ptr > rhs._ptr; };
-			bool            operator<=(RA_iterator const& rhs) { return this->_ptr <= rhs._ptr; };
-			bool            operator>=(RA_iterator const& rhs) { return this->_ptr >= rhs._ptr; };
 			
-			RA_iterator&       operator++(void) { this->_ptr++; return *this; }; 
-			RA_iterator        operator++(int) { RA_iterator temp(*this); this->_ptr++; return temp; };
-			RA_iterator&       operator--(void) { this->_ptr--; return *this; }; 
-			RA_iterator        operator--(int) { RA_iterator temp(*this); this->_ptr--; return temp; };
+			RA_iterator&		operator++(void) { this->_ptr++; return *this; }; 
+			RA_iterator			operator++(int) { RA_iterator temp(*this); this->_ptr++; return temp; };
+			RA_iterator&		operator--(void) { this->_ptr--; return *this; }; 
+			RA_iterator			operator--(int) { RA_iterator temp(*this); this->_ptr--; return temp; };
 			
-			RA_iterator        operator+(difference_type n) { RA_iterator temp(*this); temp._ptr += n; return temp; };
-			RA_iterator        operator-(difference_type n) { RA_iterator temp(*this); temp._ptr -= n; return temp; };
-			difference_type operator-(RA_iterator const& rhs) { return this->_ptr - rhs._ptr; };
-			RA_iterator&       operator+=(difference_type n) { this->_ptr += n; return *this; };
-			RA_iterator&       operator-=(difference_type n) { this->_ptr -= n; return *this; };
+			RA_iterator			operator+(difference_type n) { RA_iterator temp(*this); temp._ptr += n; return temp; };
+			RA_iterator			operator-(difference_type n) { RA_iterator temp(*this); temp._ptr -= n; return temp; };
+			difference_type		operator-(RA_iterator const& rhs) { return this->_ptr - rhs._ptr; };
+			RA_iterator&		operator+=(difference_type n) { this->_ptr += n; return *this; };
+			RA_iterator&		operator-=(difference_type n) { this->_ptr -= n; return *this; };
 			RA_iterator&		operator=(RA_iterator const& rhs) { this->_ptr = rhs._ptr; return *this; };
 
-			reference    	operator*(void) { return *(this->_ptr); };
-			pointer			operator->(void) { return this->_ptr; };
-			reference		operator[](difference_type n) { return this->_ptr[n]; };
+			reference			operator*(void) { return *(this->_ptr); };
+			pointer				operator->(void) { return this->_ptr; };
+			reference			operator[](difference_type n) { return this->_ptr[n]; };
 
 			pointer			base(void) const { return this->_ptr; };
 		private:
@@ -68,6 +62,18 @@ namespace ft
 	template <class T>
 	RA_iterator<T>        operator+(typename RA_iterator<T>::difference_type n, const RA_iterator<T>& rhs) { RA_iterator<T> temp(rhs); temp += n; return temp; };
 	
+	template <class Iter>
+	bool			operator==(RA_iterator<Iter> const& lhs, RA_iterator<Iter> const& rhs) { return lhs.base() == rhs.base(); };
+	template <class Iter>
+	bool			operator!=(RA_iterator<Iter> const& lhs, RA_iterator<Iter> const& rhs) { return lhs.base() != rhs.base(); };
+	template <class Iter>
+	bool			operator<(RA_iterator<Iter> const& lhs, RA_iterator<Iter> const& rhs) { return lhs.base() < rhs.base(); };
+	template <class Iter>
+	bool			operator>(RA_iterator<Iter> const& lhs, RA_iterator<Iter> const& rhs) { return lhs.base() > rhs.base(); };
+	template <class Iter>
+	bool			operator<=(RA_iterator<Iter> const& lhs, RA_iterator<Iter> const& rhs) { return lhs.base() <= rhs.base(); };
+	template <class Iter>
+	bool			operator>=(RA_iterator<Iter> const& lhs, RA_iterator<Iter> const& rhs) { return lhs.base() >= rhs.base(); };
 }
 
 #endif
