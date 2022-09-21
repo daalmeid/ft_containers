@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 14:23:20 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/19 16:34:54 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/21 17:20:06 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,19 @@ namespace ft
 	bool			operator<=(RA_iterator<Iter> const& lhs, RA_iterator<Iter> const& rhs) { return lhs.base() <= rhs.base(); };
 	template <class Iter>
 	bool			operator>=(RA_iterator<Iter> const& lhs, RA_iterator<Iter> const& rhs) { return lhs.base() >= rhs.base(); };
+
+	template <class Iter, class OIter>
+	bool			operator==(RA_iterator<Iter> const& lhs, RA_iterator<OIter> const& rhs) { return lhs.base() == rhs.base(); };
+	template <class Iter, class OIter>
+	bool			operator!=(RA_iterator<Iter> const& lhs, RA_iterator<OIter> const& rhs) { return lhs.base() != rhs.base(); };
+	template <class Iter, class OIter>
+	bool			operator<(RA_iterator<Iter> const& lhs, RA_iterator<OIter> const& rhs) { return lhs.base() < rhs.base(); };
+	template <class Iter, class OIter>
+	bool			operator>(RA_iterator<Iter> const& lhs, RA_iterator<OIter> const& rhs) { return lhs.base() > rhs.base(); };
+	template <class Iter, class OIter>
+	bool			operator<=(RA_iterator<Iter> const& lhs, RA_iterator<OIter> const& rhs) { return lhs.base() <= rhs.base(); };
+	template <class Iter, class OIter>
+	bool			operator>=(RA_iterator<Iter> const& lhs, RA_iterator<OIter> const& rhs) { return lhs.base() >= rhs.base(); };
 }
 
 #endif

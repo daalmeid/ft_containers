@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 16:40:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/21 16:47:47 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/21 17:41:53 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,10 @@ int	main(void) {
 	constMap.equal_range(11);
 	constMap.at(153);// = "LOLOLO";
 
+	testerIt = constMap.begin();
+	(*testerIt._M_const_cast()).second = "TROLOLOLO";
+	std::cout << testerIt->second << std::endl;
+	
 	const int	i = 42;
 
 	const ft::vector<int> constVec(i, i);
@@ -103,5 +107,12 @@ int	main(void) {
 	constVec.at(7);
 	constVec.front();
 	constVec.back();
+
+	ft::vector<int> newVec(42,42);
+
+	if (newVec == constVec)
+		std::cout << "Comparison seems fine" << std::endl;
+	else
+		std::cout << "ERROR COMPARING CONST AND NORMAL VECTOR!" << std::endl;
 
 }

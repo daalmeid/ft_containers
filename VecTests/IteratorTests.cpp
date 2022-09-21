@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/17 11:20:27 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/16 16:58:54 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/21 17:15:48 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,4 +182,15 @@ void	iterator_tests(void) {
 	std::cout << "Let's try to change the first value (remove comment to test): "<< std::endl;
 	cItBeg = vOfInts.begin();
 	//*cItBeg = 30;
+
+	std::cout << "Let's compare an iterator with a const_iterator: "<< std::endl;
+
+	ft::vector<int>::iterator	normItBeg = vOfInts.begin();
+	cItBeg = vOfInts.begin();
+
+	if (normItBeg == cItBeg)
+		std::cout << "Comparison seems fine" << std::endl;
+	else
+		std::cout << "ERROR COMPARING CONST AND NORMAL ITERATORS!" << std::endl;
+
 }

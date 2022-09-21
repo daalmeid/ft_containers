@@ -6,13 +6,14 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/20 14:09:52 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/21 12:57:58 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/21 17:07:37 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "containers.hpp"
 #include <deque>
 #include <vector>
+#include <list>
 
 void	stack_tests(void) {
 
@@ -159,6 +160,77 @@ void	stack_tests(void) {
 	{
         std::cout << "<= operator is correct." << std::endl << std::endl;
 	}
+
+	ft::stack<std::string, std::list<std::string> >	listStk;
+
+	listStk.push("24");
+	std::cout << listStk.top() << std::endl;
+	listStk.push("42");
+	std::cout << listStk.top() << std::endl;
+	listStk.push("424");
+	std::cout << listStk.top() << std::endl;
+	listStk.push("222");
+	std::cout << listStk.top() << std::endl;
+	listStk.push("123");
+	std::cout << listStk.top() << std::endl;
+	listStk.push("1");
+	std::cout << listStk.top() << std::endl;
+
+	std::cout << "Size: " << listStk.size() << std::endl;
+	std::cout << "Is this stack empty? " << (listStk.empty()? "true" : "false") << std::endl;
+	
+	ft::stack< std::string, std::list<std::string> >	newlistStk(listStk);
+
+
+	listStk.pop();
+	std::cout << listStk.top() << std::endl;
+	listStk.pop();
+	std::cout << listStk.top() << std::endl;
+	listStk.pop();
+	std::cout << listStk.top() << std::endl;
+	listStk.pop();
+	std::cout << listStk.top() << std::endl;
+	listStk.pop();
+	std::cout << listStk.top() << std::endl;
+	listStk.pop();
+	
+	std::cout << "Size: " << listStk.size() << std::endl;
+	std::cout << "Is this stack empty? " << (listStk.empty()? "true" : "false") << std::endl;
+	
+	newlistStk = listStk;
+
+	std::cout << "Size of copy: " << newlistStk.size() << std::endl;
+	std::cout << "Is this copy stack empty? " << (newlistStk.empty()? "true" : "false") << std::endl;
+
+	newlistStk.push("42");
+
+	if (newlistStk == listStk)
+        std::cout << "== operator is not working properly." << std::endl;
+    else
+        std::cout << "== operator is correct." << std::endl;
+    if (newlistStk != listStk)
+        std::cout << "!= operator is correct." << std::endl;
+    else
+        std::cout << "!= operator is not working properly." << std::endl;
+    if (newlistStk > listStk)
+        std::cout << "> operator is correct." << std::endl;
+    else
+        std::cout << "> operator is not working properly." << std::endl;
+    if (newlistStk < listStk)
+        std::cout << "< operator is not working properly." << std::endl;
+    else
+        std::cout << "< operator is correct." << std::endl;
+    if (newlistStk >= listStk)
+        std::cout << ">= operator is correct." << std::endl;
+    else
+        std::cout << ">= operator is not working properly." << std::endl;
+    if (newlistStk <= listStk)
+        std::cout << "<= operator is not working properly." << std::endl << std::endl;
+    else
+	{
+        std::cout << "<= operator is correct." << std::endl << std::endl;
+	}
+
 
 	std::vector<int>	vec(100000000, 42);
 	ft::stack<int, std::vector<int> > vecStack(vec);
