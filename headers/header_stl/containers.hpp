@@ -13,22 +13,14 @@
 #ifndef CONTAINERS_HPP
 # define CONTAINERS_HPP
 
-# if 1
-	#include <map>
-	#include <utility>
-	#include <stack>
-	#include <vector>
-	
-	namespace ft = std;
-# else
-	#include "map.hpp"
-	#include "vector.hpp"
-	#include "is_integral.hpp"
-	#include "stack.hpp"
-# endif
+# include <map>
+# include <utility>
+# include <stack>
+# include <vector>
 # include <iostream>
 # include <string>
 
+namespace ft = std;
 
 void	pair_tests(void);
 void    map_constructor_tests(void);

@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 12:22:48 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/16 16:58:54 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/21 12:24:29 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ void    map_constructor_tests(void) {
 	std::cout << "Now let's try the iterator constructor and the copy constructor on a map with 18 elements: " << std::endl << std::endl;
 
 	itBeg = tester.begin();
-
 	itEnd = tester.end();
 
 	ft::map<int, std::string>	newIterMap(itBeg, itEnd);

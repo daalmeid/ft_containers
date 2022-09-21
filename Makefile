@@ -30,7 +30,8 @@ RM		=		rm -f
 
 CMP		=		c++
 FLAGS	=		-g -Wall -Werror -Wextra -std=c++98
-INCLUDE	=		-I ./headers/ -I ./headers/utils
+INC_FT	=		-I ./headers/headers_ft/ -I ./headers/utils
+INC_STL =		-I ./headers/header_stl
 
 ################## FILES ###################
 
@@ -48,7 +49,9 @@ MPFILES	=		main.cpp\
 
 MPADD	=		$(addprefix MapTests/, $(MPFILES))
 
-MPOBJS	=		$(patsubst MapTests/%.cpp, MapTests/%.o, $(MPADD))
+MPOBJFT	=		$(patsubst MapTests/%.cpp, MapTests/%_ft.o, $(MPADD))
+
+MPOBJST	=		$(patsubst MapTests/%.cpp, MapTests/%_stl.o, $(MPADD))
 
 VCFILES	=		ConstructorTests.cpp\
 				CapacityTests.cpp\
@@ -59,37 +62,52 @@ VCFILES	=		ConstructorTests.cpp\
 
 VCADD	=		$(addprefix VecTests/, $(VCFILES))
 
-VCOBJS	=		$(patsubst VecTests/%.cpp, VecTests/%.o, $(VCADD))
+VCOBJFT	=		$(patsubst VecTests/%.cpp, VecTests/%_ft.o, $(VCADD))
+
+VCOBJST	=		$(patsubst VecTests/%.cpp, VecTests/%_stl.o, $(VCADD))
 
 STFILES	=		StackTests.cpp
 
 STADD	=		$(addprefix StackTests/, $(STFILES))
 
-STOBJS	=		$(patsubst StackTests/%.cpp, StackTests/%.o, $(STADD))
+STOBJFT	=		$(patsubst StackTests/%.cpp, StackTests/%_ft.o, $(STADD))
+
+STOBJST	=		$(patsubst StackTests/%.cpp, StackTests/%_stl.o, $(STADD))
 
 ################## RULES ###################
 
 all: $(FTNAME) $(STLNAME)
 
-VecTests/%.o : VecTests/%.cpp
-	$(CMP) $(FLAGS) $(INCLUDE) -c $< -o $@
+VecTests/%_ft.o : VecTests/%.cpp
+	$(CMP) $(FLAGS) $(INC_FT) -c $< -o $@
 
-MapTests/%.o : MapTests/%.cpp
-	$(CMP) $(FLAGS) $(INCLUDE) -c $< -o $@
+VecTests/%_stl.o : VecTests/%.cpp
+	$(CMP) $(FLAGS) $(INC_STL) -c $< -o $@
 
-StackTests/%.o : StackTests/%.cpp
-	$(CMP) $(FLAGS) $(INCLUDE) -c $< -o $@
+MapTests/%_ft.o : MapTests/%.cpp
+	$(CMP) $(FLAGS) $(INC_FT) -c $< -o $@
 
-$(FTNAME): $(MPOBJS) $(VCOBJS) $(STOBJS)
-	$(CMP) $(FLAGS) $(INCLUDE) $(MPOBJS) $(VCOBJS) $(STOBJS) -o $(FTNAME)
+MapTests/%_stl.o : MapTests/%.cpp
+	$(CMP) $(FLAGS) $(INC_STL) -c $< -o $@
 
-$(STLNAME): $(MPOBJS) $(VCOBJS) $(STOBJS)
-	$(CMP) $(FLAGS) $(INCLUDE) $(MPOBJS) $(VCOBJS) $(STOBJS) -o $(STLNAME)
+StackTests/%_ft.o : StackTests/%.cpp
+	$(CMP) $(FLAGS) $(INC_FT) -c $< -o $@
+
+StackTests/%_stl.o : StackTests/%.cpp
+	$(CMP) $(FLAGS) $(INC_STL) -c $< -o $@
+
+$(FTNAME): $(MPOBJFT) $(VCOBJFT) $(STOBJFT)
+	$(CMP) $(FLAGS) $(INC_FT) $(MPOBJFT) $(VCOBJFT) $(STOBJFT) -o $(FTNAME)
+
+$(STLNAME): $(MPOBJST) $(VCOBJST) $(STOBJST)
+	$(CMP) $(FLAGS) $(INC_STL) $(MPOBJST) $(VCOBJST) $(STOBJST) -o $(STLNAME)
+
+
 
 ################## CLEAN ###################
 
 clean:
-	$(RM) $(MPOBJS) $(VCOBJS) $(STOBJS)
+	$(RM) $(MPOBJFT) $(VCOBJFT) $(STOBJFT) $(MPOBJST) $(VCOBJST) $(STOBJST)
 
 fclean: clean
 	$(RM) $(FTNAME) $(STLNAME)

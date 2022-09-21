@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 16:40:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/20 16:18:38 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/21 16:47:47 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,9 @@ int	main(void) {
 	constMap.equal_range(11);
 	constMap.at(153);// = "LOLOLO";
 
-	const ft::vector<int> constVec(10, 10);
+	const int	i = 42;
+
+	const ft::vector<int> constVec(i, i);
 
 	constVec.begin();
 	constVec.end();
@@ -102,11 +104,4 @@ int	main(void) {
 	constVec.front();
 	constVec.back();
 
-
-	// ft::map<int, std::string>::iterator cIt = constMap.begin();
-	
-	// std::cout << cIt->second << std::endl;
-	// cIt->second = "WALALALA";
-	// std::cout << cIt->second << std::endl;
-	
 }

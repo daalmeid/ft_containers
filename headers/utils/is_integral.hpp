@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 10:49:13 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/08/18 14:58:30 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/21 16:37:25 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,18 @@
 
 namespace ft
 {
+
 	template <class T>
 	struct is_integral: integral_constant<T, false> {};
+	
+	template <class T>
+	struct is_integral<const T>: integral_constant<T, is_integral<T>::value> {};
+
+	template <class T>
+	struct is_integral<volatile T>: integral_constant<T, is_integral<T>::value> {};
+
+	template <class T>
+	struct is_integral<const volatile T>: integral_constant<T, is_integral<T>::value> {};
 
 	template <>
 	struct is_integral<bool>: integral_constant<bool, true> {};

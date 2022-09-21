@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 13:00:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/20 16:47:34 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/21 13:13:04 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,15 +292,10 @@ namespace ft
 			};
 
 			void		swap(map& other) {
-
-				tree_pointer		treeSwap = this->_tree;
-				size_type			sizeSwap = this->_size;
 				
 				std::swap(this->_comp, other._comp);
-				this->_tree = other._tree;
-				this->_size = other._size;
-				other._tree = treeSwap;
-				other._size = sizeSwap;
+				std::swap(this->_tree, other._tree);
+				std::swap(this->_size, other._size);
 				this->_tree->parent = this->_pastTheEndNode;
 				this->_pastTheEndNode->lftNode = this->_tree;
 				other._tree->parent = other._pastTheEndNode;

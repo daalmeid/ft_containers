@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/20 12:40:08 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/20 12:45:06 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/21 12:52:28 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ void	map_performance_tests(void) {
 
 	for (size_t i = 500; i < 1000000 ; i++)
 	{
-		std::cout << tester.lower_bound(i)->first << std::endl;
-		std::cout << tester.upper_bound(i - 1)->first << std::endl;
+		tester.lower_bound(i)->first;
+		tester.upper_bound(i - 1)->first;
 		tester.equal_range(i - 1);
 		tester.find(i);
 	}

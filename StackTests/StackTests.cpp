@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/20 14:09:52 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/20 16:37:45 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/21 12:57:58 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,11 +160,11 @@ void	stack_tests(void) {
         std::cout << "<= operator is correct." << std::endl << std::endl;
 	}
 
-	// std::vector<int>	vec(100000000, 42);
-	// ft::stack<int, std::vector<int> > vecStack(vec);
+	std::vector<int>	vec(100000000, 42);
+	ft::stack<int, std::vector<int> > vecStack(vec);
 
-	// for (size_t i = 1; i < 100000000; i++)
-	// 	vecStack.pop();
-	// for (size_t i = 1; i < 100000000; i++)
-	// 	vecStack.push(42);
+	for (size_t i = 1; i < 100000000; i++)
+		vecStack.pop();
+	for (size_t i = 1; i < 100000000; i++)
+		vecStack.push(42);
 }
