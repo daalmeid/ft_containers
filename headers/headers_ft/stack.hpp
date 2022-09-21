@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   stack.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/20 12:53:36 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/20 16:47:13 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/22 00:00:09 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ namespace ft
 			friend bool operator>(const ft::stack<Tp,Ctnr>& lhs, const ft::stack<Tp,Ctnr>& rhs);
 			template< class Tp, class Ctnr >
 			friend bool operator>=(const ft::stack<Tp,Ctnr>& lhs, const ft::stack<Tp,Ctnr>& rhs);
+			
 			protected:
 			
 			/*MEMBER OBJECT*/

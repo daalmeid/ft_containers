@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 16:40:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/21 17:41:53 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/22 00:03:48 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "containers.hpp"
+// #include "map.hpp"
 
 int	main(void) {
 
@@ -94,6 +95,8 @@ int	main(void) {
 	testerIt = constMap.begin();
 	(*testerIt._M_const_cast()).second = "TROLOLOLO";
 	std::cout << testerIt->second << std::endl;
+	/*HERE TO SHOW _M_node HAS THE SAME MEMBERS*/
+	//testerIt._M_node.
 	
 	const int	i = 42;
 
@@ -108,11 +111,52 @@ int	main(void) {
 	constVec.front();
 	constVec.back();
 
-	ft::vector<int> newVec(42,42);
+	std::cout << ".**********************************." << std::endl;
+	std::cout << "|          Special Tests           |" << std::endl;
+	std::cout << " ********************************** " << std::endl << std::endl;
 
-	if (newVec == constVec)
-		std::cout << "Comparison seems fine" << std::endl;
-	else
-		std::cout << "ERROR COMPARING CONST AND NORMAL VECTOR!" << std::endl;
+	std::cout << "Declaring two vectors, iterators (begin and end) to the first and then use swap." << std::endl;
+	std::cout << "It should still print the original content (42 ten times), since the iters are not affected by swap!" << std::endl;
+	ft::vector<int> firstVec(10,42);
+	ft::vector<int> secondVec(10,423253);
+
+	ft::vector<int>::iterator	firstBegIt = firstVec.begin();
+	ft::vector<int>::iterator	firstEndIt = firstVec.end();
+
+	firstVec.swap(secondVec);
+
+	while (firstBegIt != firstEndIt)
+		std::cout << *firstBegIt++ << std::endl;
+
+	std::cout << "In map, insert and erase should not affect the iterators (unless erase is used on the value pointed to by the iterator)." << std::endl;
+	std::cout << "Let's create a map with one value, get an iter to it and insert a bunch of values, then iterate:" << std::endl;
+
+	tester.clear();
+
+	tester.insert(ft::make_pair(10, "Ten"));
+	ft::map<int, std::string>::iterator	mapIt(tester.find(10));
+	tester.insert(ft::make_pair(2, "Two"));
+	tester.insert(ft::make_pair(13, "thirteen"));
+	tester.insert(ft::make_pair(4, "Four"));
+	tester.insert(ft::make_pair(12, "Twelve"));
+	tester.insert(ft::make_pair(0, "Zero"));
+	tester.insert(ft::make_pair(15, "fifteen"));
+	tester.insert(ft::make_pair(14, "fourteen"));
+	tester.insert(ft::make_pair(17, "seventeen"));
+	tester.insert(ft::make_pair(5, "five"));
+	tester.insert(ft::make_pair(40, "forty"));
+
+	while (mapIt != tester.end())
+		std::cout << mapIt++->first << std::endl;
+
+	std::cout << "Now reset the iterator to the same spot and erase a few values that are in front: " << std::endl;
+
+	mapIt = tester.find(10);
+	tester.erase(15);
+	tester.erase(17);
+	tester.erase(14);
+
+	while (mapIt != tester.end())
+		std::cout << mapIt++->first << std::endl;
 
 }
