@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 12:47:38 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/20 16:48:09 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/22 13:19:30 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,8 @@ namespace ft
             /*Modifiers*/
 
             template <class InputIterator>
-            void                assign(InputIterator first, InputIterator last) {
+            void		assign(InputIterator first, InputIterator last,
+					typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type* = 0) {
 
                 size_type   newSize = std::distance(first, last);
                 size_type   i = 0;
@@ -254,13 +255,8 @@ namespace ft
                 
                 vector<value_type>  saveState(position, this->end());
                 iterator            indexGet = this->begin();
-                size_type           i = 0;
+                size_type           i = std::distance(this->begin(), position);
 
-                while (indexGet != position)
-                {
-                    indexGet++;
-                    i++;
-                }
 				if (this->_capacity == 0)
 					this->reserve(1);
                 else if (this->_size == this->_capacity)
@@ -271,10 +267,10 @@ namespace ft
                 this->_alloc.destroy(&(this->_start[i]));
                 this->_alloc.construct(&(this->_start[i++]), val);
                 
-                iterator            newPos = this->begin() + i;
                 iterator            ssIt(saveState.begin());
+                iterator            ssEndIt(saveState.end());
 
-                while (ssIt != saveState.end())
+                while (ssIt != ssEndIt)
                 {
                     this->_alloc.destroy(&(this->_start[i]));
                     this->_alloc.construct(&(this->_start[i++]), *ssIt++);
@@ -287,14 +283,8 @@ namespace ft
             void                insert(iterator position, size_type n, const value_type& val) {
 
 				vector<value_type>  saveState(position, this->end());
-				iterator            indexGet = this->begin();
-                size_type           i = 0;
+                size_type           i = std::distance(this->begin(), position);
 
-                while (indexGet != position)
-                {
-                    indexGet++;
-                    i++;
-                }
                 if (this->_size + n <= this->_size * 2 && this->_size + n > this->_capacity)
                     this->reserve(this->_capacity * 2);
 				else if (this->_size + n > this->_capacity)
@@ -307,8 +297,9 @@ namespace ft
 				}
 				
                 iterator            ssIt(saveState.begin());
+                iterator            ssEndIt(saveState.end());
 
-                while (ssIt != saveState.end())
+                while (ssIt != ssEndIt)
                 {
 					if (i < this->_size)
 						this->_alloc.destroy(&(this->_start[i]));
@@ -318,18 +309,13 @@ namespace ft
             };
 
             template <class InputIterator>
-            void                insert(iterator position, InputIterator first, InputIterator last) {
+            void		insert(iterator position, InputIterator first, InputIterator last,
+					typename enable_if<!is_integral<InputIterator>::value, InputIterator>::type* = 0) {
 
 				vector<value_type>  saveState(position, this->end());
 				vector<value_type>  itValCpy(first, last);
-				iterator            indexGet = this->begin();
-                size_type           i = 0;
+    			size_type           i = std::distance(this->begin(), position);
 
-                while (indexGet != position)
-                {
-                    indexGet++;
-                    i++;
-                }
 				size_type	dist = std::distance(first, last);
 				if (this->_size + dist <= this->_size * 2 && this->_size + dist > this->_capacity)
 				    this->reserve(this->_capacity * 2);
@@ -345,8 +331,10 @@ namespace ft
 				}
 				
                 iterator            ssIt(saveState.begin());
+                iterator            ssEndIt(saveState.end());
+				
 
-                while (ssIt != saveState.end())
+                while (ssIt != ssEndIt)
                 {
 					if (i < this->_size)
                     	this->_alloc.destroy(&(this->_start[i]));
@@ -358,7 +346,9 @@ namespace ft
             iterator            erase(iterator position) { 
 
                 iterator	returner = position;
-				while (position + 1 != this->end()) {
+				iterator	endIt = this->end();
+				
+				while (position + 1 != endIt) {
 
 					this->_alloc.destroy(&*position);
 					this->_alloc.construct(&*position, *(position + 1));
@@ -376,16 +366,15 @@ namespace ft
 				if (first != last)
 				{	
 					size_type	dist = std::distance(first, last);
-					if (last != this->end())
-					{
-						while (last != this->end()) {
+					iterator	endIt = this->end();
 
-							this->_alloc.destroy(&*first);
-							this->_alloc.construct(&*first++, *last++);
-						}
+					while (last != endIt) {
+
+						this->_alloc.destroy(&*first);
+						this->_alloc.construct(&*first++, *last++);
 					}
 					for (size_type i = 1; i <= dist; i++)
-						this->_alloc.destroy(&*(this->end() - i));
+						this->_alloc.destroy(&*(endIt - i));
 					this->_size -= dist;
 				}
 				return returner;

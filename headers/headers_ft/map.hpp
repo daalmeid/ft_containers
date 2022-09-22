@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 13:00:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/21 13:13:04 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/22 12:01:25 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -421,7 +421,7 @@ namespace ft
 	
 			/*ALLOCATOR*/
 
-            Alloc			get_allocator(void) const { return this->_alloc; };
+            allocator_type	get_allocator(void) const { return this->_alloc; };
 			
 			/*HELPER FUNCTIONS*/
 

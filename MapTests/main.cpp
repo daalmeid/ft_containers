@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 16:40:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/22 00:03:48 by marvin           ###   ########.fr       */
+/*   Updated: 2022/09/22 14:14:43 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,4 +159,31 @@ int	main(void) {
 	while (mapIt != tester.end())
 		std::cout << mapIt++->first << std::endl;
 
+	std::cout << std::endl << ".**********************************." << std::endl;
+	std::cout << "|        Vector Performance        |" << std::endl;
+	std::cout << " ********************************** " << std::endl << std::endl;
+	
+	for (size_t i = 0; i < 10000000; i++)
+		firstVec.push_back(i);
+	
+	firstVec.assign(2000000, 42);
+	
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+	firstVec.insert(firstVec.begin(), 1, 42);
+
+	
 }
