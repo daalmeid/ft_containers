@@ -6,15 +6,13 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 14:23:20 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/19 18:24:47 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/22 14:31:58 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BIDIRECTIONAL_ITERATOR_HPP
 # define BIDIRECTIONAL_ITERATOR_HPP
 # include "iterator_traits.hpp"
-# include "is_const.hpp"
-# include "enable_if.hpp"
 # include "node.hpp"
 
 namespace ft

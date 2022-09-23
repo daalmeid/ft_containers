@@ -6,7 +6,7 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 12:47:38 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/22 13:19:30 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/22 14:35:29 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,14 @@
 # include <memory>
 # include <sstream>
 # include <stdexcept>
+# include <iostream>
 # include "random_access_iterator.hpp"
 # include "reverse_iterator.hpp"
 # include "enable_if.hpp"
 # include "equal.hpp"
 # include "lexicographical_compare.hpp"
 # include "is_integral.hpp"
-# include <iostream>
+
 
 namespace ft
 {

@@ -6,13 +6,12 @@
 /*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 11:12:26 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/12 13:10:02 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/09/22 14:34:21 by daalmeid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ITERATOR_TRAITS_HPP
 # define ITERATOR_TRAITS_HPP
-# include <iterator>
 # include <cstddef>
 
 namespace ft
