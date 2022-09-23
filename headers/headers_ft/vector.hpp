@@ -211,6 +211,10 @@ namespace ft
 
                 size_type   newSize = std::distance(first, last);
                 size_type   i = 0;
+                vector<value_type>  saveState(first, last);
+
+                first = saveState.begin();
+                last = saveState.end();
 
                 if (newSize > this->_capacity)
                     this->reserve(newSize);
@@ -287,7 +291,7 @@ namespace ft
                 size_type           i = std::distance(this->begin(), position);
 
                 if (this->_size + n <= this->_size * 2 && this->_size + n > this->_capacity)
-                    this->reserve(this->_capacity * 2);
+                    this->reserve(this->_size * 2);
 				else if (this->_size + n > this->_capacity)
                     this->reserve(this->_size + n);
 				for (size_type j = 0; j < n; j++) {
@@ -319,7 +323,7 @@ namespace ft
 
 				size_type	dist = std::distance(first, last);
 				if (this->_size + dist <= this->_size * 2 && this->_size + dist > this->_capacity)
-				    this->reserve(this->_capacity * 2);
+				    this->reserve(this->_size * 2);
 				else if (this->_size + dist > this->_capacity)
                     this->reserve(this->_size + dist);
                 first = itValCpy.begin();
