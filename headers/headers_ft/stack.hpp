@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/20 12:53:36 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/22 00:00:09 by marvin           ###   ########.fr       */
+/*   Updated: 2022/10/12 16:39:35 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ namespace ft
 
 			explicit stack(const Container& cont = Container()): c(cont) {};
 
-			stack(const stack& other): c(other.c) { std::cout << "My stack called!" << std::endl; };
+			stack(const stack& other): c(other.c) {};
 
 			~stack(void) {};
 

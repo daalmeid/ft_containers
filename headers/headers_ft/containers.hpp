@@ -15,7 +15,6 @@
 
 # include "map.hpp"
 # include "vector.hpp"
-# include "is_integral.hpp"
 # include "stack.hpp"
 # include <iostream>
 # include <string>

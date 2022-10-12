@@ -102,7 +102,7 @@ $(FTNAME): $(MPOBJFT) $(VCOBJFT) $(STOBJFT)
 $(STLNAME): $(MPOBJST) $(VCOBJST) $(STOBJST)
 	$(CMP) $(FLAGS) $(INC_STL) $(MPOBJST) $(VCOBJST) $(STOBJST) -o $(STLNAME)
 
-test:
+test: $(FTNAME) $(STLNAME)
 	./$(FTNAME) > ft && ./$(STLNAME) > stl
 
 ################## CLEAN ###################
@@ -115,4 +115,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re test

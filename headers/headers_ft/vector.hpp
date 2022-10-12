@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/27 12:47:38 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/22 14:35:29 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/10/12 16:39:06 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ namespace ft
             explicit vector(const allocator_type& alloc = allocator_type()):
 			_alloc(alloc), _size(0), _capacity(0) {
 
-				std::cout << "My vector called!" << std::endl; 
 				this->_start = NULL;
             };
             

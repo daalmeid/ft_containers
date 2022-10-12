@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: daalmeid <daalmeid@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/19 13:00:33 by daalmeid          #+#    #+#             */
-/*   Updated: 2022/09/22 12:01:25 by daalmeid         ###   ########.fr       */
+/*   Updated: 2022/10/12 16:38:52 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ namespace ft
 			explicit map (const key_compare& comp = key_compare(),
 							const allocator_type& alloc = allocator_type()): _tree(NULL), _alloc(alloc), _comp(comp), _size(0) {
 				
-				 std::cout << "My map called!" << std::endl; 
 				_tree = _TreeAlloc.allocate(1);
 				_tree->lftNode = NULL;
 				_tree->rgtNode = NULL;
