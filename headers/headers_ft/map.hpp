@@ -506,7 +506,7 @@ namespace ft
 					if (node->rgtNode->lftNode != NULL || node->rgtNode->rgtNode != NULL)
 						tree_cleaner(node->rgtNode);
 					// std::cout << "Destroying node of " << node->rgtNode->content.first << std::endl;
-						node_destroyer(node->rgtNode);
+					node_destroyer(node->rgtNode);
 				}
 			}
 			

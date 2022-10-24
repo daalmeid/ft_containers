@@ -45,8 +45,8 @@ void	map_performance_tests(void) {
 
 	for (size_t i = 500; i < 1000000 ; i++)
 	{
-		tester.lower_bound(i)->first;
-		tester.upper_bound(i - 1)->first;
+		tester.lower_bound(i);
+		tester.upper_bound(i - 1);
 		tester.equal_range(i - 1);
 		tester.find(i);
 	}
